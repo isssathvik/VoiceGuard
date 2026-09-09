@@ -1,0 +1,869 @@
+<title>Understanding Blockchain in VoiceGuard</title>
+<style>
+:root {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f5f5f5;
+  --border: #e0e0e0;
+  --text: #1a1a1a;
+  --text-dim: #666666;
+  --accent: #6366f1;
+  --accent-dim: #818cf8;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --block-1: #dbeafe;
+  --block-2: #e0e7ff;
+  --block-3: #fae8ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0a0a0a;
+    --surface: #1a1a1a;
+    --surface-2: #262626;
+    --border: #333333;
+    --text: #f5f5f5;
+    --text-dim: #a3a3a3;
+    --block-1: #1e3a5f;
+    --block-2: #2e2a5f;
+    --block-3: #3a1e5f;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --surface: #1a1a1a;
+  --surface-2: #262626;
+  --border: #333333;
+  --text: #f5f5f5;
+  --text-dim: #a3a3a3;
+  --block-1: #1e3a5f;
+  --block-2: #2e2a5f;
+  --block-3: #3a1e5f;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-box: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  padding: 2rem 1rem;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  text-wrap: balance;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 3rem 0 1.5rem;
+  text-wrap: balance;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 2rem 0 1rem;
+  color: var(--accent);
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: var(--text-dim);
+  margin-bottom: 3rem;
+  line-height: 1.7;
+}
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.demo-box {
+  background: var(--surface-2);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.chain-visual {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 2rem 0;
+  margin: 2rem 0;
+}
+
+.block {
+  min-width: 200px;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  padding: 1rem;
+  position: relative;
+}
+
+.block.block-1 { background: var(--block-1); border-color: var(--accent); }
+.block.block-2 { background: var(--block-2); border-color: var(--accent-dim); }
+.block.block-3 { background: var(--block-3); border-color: #a78bfa; }
+
+.block-header {
+  font-weight: 700;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.block-field {
+  margin: 0.5rem 0;
+  font-size: 0.875rem;
+}
+
+.block-label {
+  font-weight: 600;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.block-value {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8125rem;
+  word-break: break-all;
+  margin-top: 0.25rem;
+}
+
+.arrow-right {
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.step-grid {
+  display: grid;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.step-item {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.step-number {
+  width: 60px;
+  height: 60px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.step-content p {
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+.comparison {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.comparison-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.comparison-card h4 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.comparison-card ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.comparison-card li {
+  display: flex;
+  align-items: start;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.comparison-card li::before {
+  content: '•';
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.interactive-demo {
+  background: var(--surface-2);
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.demo-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: var(--accent-dim);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 2px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--surface-2);
+  border-color: var(--accent);
+}
+
+.output {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  text-align: left;
+  min-height: 120px;
+  display: none;
+}
+
+.output.visible {
+  display: block;
+}
+
+.hash {
+  color: var(--accent);
+  word-break: break-all;
+}
+
+.callout {
+  background: var(--surface-2);
+  border-left: 4px solid var(--accent);
+  padding: 1.5rem;
+  border-radius: 4px;
+  margin: 2rem 0;
+}
+
+.callout.warning {
+  border-left-color: var(--warning);
+}
+
+.callout.success {
+  border-left-color: var(--success);
+}
+
+.callout h4 {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.code-example {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.code-comment {
+  color: #6a9955;
+}
+
+.keyword {
+  color: #569cd6;
+}
+
+.string {
+  color: #ce9178;
+}
+
+.function {
+  color: #dcdcaa;
+}
+
+@media (max-width: 640px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .section {
+    padding: 1.5rem;
+  }
+
+  .step-item {
+    grid-template-columns: 50px 1fr;
+    gap: 1rem;
+  }
+
+  .step-number {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+}
+</style>
+
+<div class="container">
+  <h1>🔗 Understanding Blockchain in VoiceGuard</h1>
+  <p class="subtitle">A complete guide to blockchain technology and how it creates tamper-proof evidence in your fraud detection system</p>
+
+  <div class="section">
+    <h2>What is Blockchain? (Simple Explanation)</h2>
+    <p style="margin-bottom: 1rem;">Imagine a notebook that everyone can read, but <strong>nobody can erase or change what's already written</strong>. That's blockchain.</p>
+
+    <div class="comparison">
+      <div class="comparison-card">
+        <h4>📓 Regular Database</h4>
+        <ul>
+          <li>One company controls it</li>
+          <li>Records can be edited</li>
+          <li>History can be deleted</li>
+          <li>You must trust the owner</li>
+        </ul>
+      </div>
+
+      <div class="comparison-card">
+        <h4>🔗 Blockchain</h4>
+        <ul>
+          <li>Many computers verify together</li>
+          <li>Records are permanent</li>
+          <li>History is immutable</li>
+          <li>Math provides trust</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>How Blockchain Actually Works</h2>
+
+    <h3>The Chain of Blocks</h3>
+    <p style="margin-bottom: 1rem;">Data is stored in "blocks" that are chained together. Each block contains:</p>
+
+    <div class="chain-visual">
+      <div class="block block-1">
+        <div class="block-header">Block #1</div>
+        <div class="block-field">
+          <div class="block-label">Data</div>
+          <div class="block-value">VoiceGuard detected fake voice (94% confidence)</div>
+        </div>
+        <div class="block-field">
+          <div class="block-label">Hash</div>
+          <div class="block-value">7a3f2e...</div>
+        </div>
+        <div class="block-field">
+          <div class="block-label">Previous Hash</div>
+          <div class="block-value">000000...</div>
+        </div>
+      </div>
+
+      <div class="arrow-right">→</div>
+
+      <div class="block block-2">
+        <div class="block-header">Block #2</div>
+        <div class="block-field">
+          <div class="block-label">Data</div>
+          <div class="block-value">Another fraud attempt from +1-555-0199</div>
+        </div>
+        <div class="block-field">
+          <div class="block-label">Hash</div>
+          <div class="block-value">9b4e1c...</div>
+        </div>
+        <div class="block-field">
+          <div class="block-label">Previous Hash</div>
+          <div class="block-value">7a3f2e...</div>
+        </div>
+      </div>
+
+      <div class="arrow-right">→</div>
+
+      <div class="block block-3">
+        <div class="block-header">Block #3</div>
+        <div class="block-field">
+          <div class="block-label">Data</div>
+          <div class="block-value">Scam reported to authorities</div>
+        </div>
+        <div class="block-field">
+          <div class="block-label">Hash</div>
+          <div class="block-value">5d8a7f...</div>
+        </div>
+        <div class="block-field">
+          <div class="block-label">Previous Hash</div>
+          <div class="block-value">9b4e1c...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h4>🔑 Key Concept: Hash</h4>
+      <p>A <strong>hash</strong> is like a digital fingerprint. It's a unique code generated from the block's data. If you change even one character in the data, the hash completely changes.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Why Can't You Change Past Blocks?</h2>
+
+    <div class="step-grid">
+      <div class="step-item">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Each Block References the Previous One</h4>
+          <p>Block 2 contains Block 1's hash. If you try to change Block 1, its hash changes.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>The Chain Breaks</h4>
+          <p>Now Block 2's "previous hash" doesn't match Block 1's new hash. The chain is broken!</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>Everyone Knows It Was Tampered With</h4>
+          <p>All computers on the network can see the chain is invalid. Your change is rejected.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="interactive-demo">
+    <h3 style="margin-bottom: 1rem;">🎮 Interactive Demo: Try Tampering with a Block</h3>
+    <p style="color: var(--text-dim); margin-bottom: 1.5rem;">See what happens when you try to change data after it's recorded</p>
+
+    <div class="demo-controls">
+      <button class="btn" onclick="createBlock()">Add Fraud Detection to Chain</button>
+      <button class="btn btn-secondary" onclick="tamperBlock()">Try to Change Past Data</button>
+      <button class="btn btn-secondary" onclick="resetDemo()">Reset Demo</button>
+    </div>
+
+    <div id="demoOutput" class="output"></div>
+  </div>
+
+  <div class="section">
+    <h2>How VoiceGuard Uses Blockchain</h2>
+
+    <h3>The Complete Flow</h3>
+
+    <div class="step-grid">
+      <div class="step-item">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Phone Call Happens</h4>
+          <p>User receives a call. VoiceGuard's AI analyzes the voice in real-time.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>AI Detects Fake Voice</h4>
+          <p>The 5-layer detection system determines: "This is 94% likely to be AI-generated."</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>Threat Record Created</h4>
+          <p>System packages the evidence: timestamp, caller info, confidence score, audio fingerprint hash.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h4>Submitted to Blockchain</h4>
+          <p>The threat record is hashed and submitted as a transaction to Ethereum (or private chain for enterprises).</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">5</div>
+        <div class="step-content">
+          <h4>Permanent Evidence</h4>
+          <p>The record is now immutable. Police, banks, and courts can verify it was never altered.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <h4>✅ What Gets Stored on Blockchain</h4>
+      <p><strong>Stored:</strong> Timestamp, detection confidence (94%), threat type (voice cloning), audio fingerprint hash<br><br>
+      <strong>NOT stored:</strong> Actual audio recording, phone numbers, personal names, or any private data<br><br>
+      <strong>Why:</strong> Blockchain is public and permanent. Only non-sensitive metadata goes on-chain.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Real-World Example</h2>
+
+    <div class="demo-box">
+      <h4 style="margin-bottom: 1rem;">Scenario: Elderly Man Receives Scam Call</h4>
+
+      <div style="margin: 1.5rem 0;">
+        <p style="margin-bottom: 0.5rem;"><strong>📞 September 4, 2026, 2:30 PM</strong></p>
+        <p style="color: var(--text-dim);">Mr. Sharma receives a call from someone claiming to be his grandson, asking for emergency money.</p>
+      </div>
+
+      <div style="margin: 1.5rem 0;">
+        <p style="margin-bottom: 0.5rem;"><strong>🤖 VoiceGuard Detects AI Clone (91% Confidence)</strong></p>
+        <p style="color: var(--text-dim);">The app immediately alerts Mr. Sharma: "WARNING: AI-generated voice detected!"</p>
+      </div>
+
+      <div style="margin: 1.5rem 0;">
+        <p style="margin-bottom: 0.5rem;"><strong>🔗 Blockchain Record Created</strong></p>
+        <div class="code-example">
+Transaction Hash: 0x8f3d2c9a1e5b7f4d6a8c2e9b7f1d4a6c8e2b5f7a9c1e3d6b8f2a5c7e9d4b6a8
+Block Number: #15847293
+Timestamp: 2026-09-04 14:30:15 UTC
+Confidence: 91%
+Threat Type: AI Voice Cloning
+Status: ✓ CONFIRMED IMMUTABLE</div>
+      </div>
+
+      <div style="margin: 1.5rem 0;">
+        <p style="margin-bottom: 0.5rem;"><strong>⚖️ One Week Later: Court Case</strong></p>
+        <p style="color: var(--text-dim);">Police catch the scammer. In court, the defense claims the evidence was fabricated. The blockchain record proves the detection happened in real-time and was never altered. <strong>Case closed.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Your Current Implementation</h2>
+
+    <div class="callout warning">
+      <h4>⚠️ Important: Demo vs Production</h4>
+      <p>Your prototype uses <strong>simulated blockchain</strong> for the hackathon. It generates realistic transaction hashes locally—perfect for showing judges the concept without needing actual blockchain infrastructure.</p>
+    </div>
+
+    <h3>The Code in Your Prototype</h3>
+
+    <div class="code-example"><span class="keyword">function</span> <span class="function">logToBlockchain</span>(confidence) {
+  <span class="code-comment">// Generate realistic-looking transaction hash</span>
+  <span class="keyword">const</span> txHash = <span class="string">'0x'</span> + generateRandomHash(<span class="string">64</span>);
+
+  <span class="code-comment">// Simulate Ethereum block number</span>
+  <span class="keyword">const</span> blockNum = Math.floor(Math.random() * <span class="string">1000000</span>) + <span class="string">15000000</span>;
+
+  <span class="code-comment">// Record timestamp</span>
+  <span class="keyword">const</span> timestamp = <span class="keyword">new</span> Date().toLocaleString();
+
+  <span class="code-comment">// Display to user</span>
+  <span class="function">displayBlockchainConfirmation</span>({
+    txHash: txHash,
+    blockNumber: blockNum,
+    timestamp: timestamp,
+    network: <span class="string">'Ethereum Mainnet'</span>,
+    confidence: confidence
+  });
+}</div>
+
+    <h3>Production Implementation (Future)</h3>
+
+    <div class="code-example"><span class="code-comment">// Real blockchain integration with Web3</span>
+<span class="keyword">const</span> Web3 = <span class="keyword">require</span>(<span class="string">'web3'</span>);
+<span class="keyword">const</span> web3 = <span class="keyword">new</span> Web3(<span class="string">'https://polygon-mainnet.infura.io/v3/YOUR_KEY'</span>);
+
+<span class="keyword">async function</span> <span class="function">logToBlockchain</span>(threatData) {
+  <span class="code-comment">// Connect to smart contract</span>
+  <span class="keyword">const</span> contract = <span class="keyword">new</span> web3.eth.Contract(ABI, CONTRACT_ADDRESS);
+
+  <span class="code-comment">// Submit transaction</span>
+  <span class="keyword">const</span> tx = <span class="keyword">await</span> contract.methods.<span class="function">recordThreat</span>(
+    threatData.timestamp,
+    threatData.confidence,
+    threatData.audioHash
+  ).<span class="function">send</span>({ from: WALLET_ADDRESS });
+
+  <span class="code-comment">// Return real transaction hash</span>
+  <span class="keyword">return</span> tx.transactionHash;
+}</div>
+  </div>
+
+  <div class="section">
+    <h2>Why This Matters for Your Hackathon</h2>
+
+    <div class="comparison">
+      <div class="comparison-card">
+        <h4>🎯 For Judges</h4>
+        <ul>
+          <li>Shows you understand emerging tech</li>
+          <li>Demonstrates forward-thinking</li>
+          <li>Solves the evidence tampering problem</li>
+          <li>Makes your solution more credible</li>
+        </ul>
+      </div>
+
+      <div class="comparison-card">
+        <h4>🏆 Competitive Advantage</h4>
+        <ul>
+          <li>Most teams won't have this feature</li>
+          <li>Blockchain = buzzword judges love</li>
+          <li>Shows production readiness</li>
+          <li>Proves you're thinking long-term</li>
+        </ul>
+      </div>
+
+      <div class="comparison-card">
+        <h4>⚖️ Real-World Value</h4>
+        <ul>
+          <li>Makes evidence court-admissible</li>
+          <li>Banks require audit trails</li>
+          <li>Prevents evidence disputes</li>
+          <li>Builds trust with authorities</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>What to Tell Judges</h2>
+
+    <div class="comparison">
+      <div class="comparison-card" style="border-color: var(--success);">
+        <h4 style="color: var(--success);">✅ DO Say</h4>
+        <ul>
+          <li>"We use blockchain for immutable threat logging"</li>
+          <li>"Every detection is permanently recorded"</li>
+          <li>"Evidence is tamper-proof for courts"</li>
+          <li>"The demo simulates this concept"</li>
+          <li>"Production would use Polygon for lower costs"</li>
+        </ul>
+      </div>
+
+      <div class="comparison-card" style="border-color: var(--danger);">
+        <h4 style="color: var(--danger);">❌ DON'T Say</h4>
+        <ul>
+          <li>"This is actually on blockchain right now"</li>
+          <li>"You can verify this on Etherscan"</li>
+          <li>"We store audio on blockchain"</li>
+          <li>"It's fully decentralized today"</li>
+          <li>Anything that claims real transactions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout success" style="margin-top: 2rem;">
+      <h4>💡 The Perfect Answer</h4>
+      <p><em>"VoiceGuard uses blockchain technology to create an immutable audit trail of every fraud detection. When our AI identifies a fake voice, the detection metadata—timestamp, confidence score, and audio fingerprint—is recorded on-chain, making it tamper-proof evidence for legal proceedings. Our prototype demonstrates this concept with simulated transactions, and the production version would deploy to Polygon or a private consortium chain for enterprises."</em></p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Key Takeaways</h2>
+
+    <div class="step-grid">
+      <div class="step-item">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Blockchain = Permanent Notebook</h4>
+          <p>Once written, nobody can change or delete the records. Perfect for evidence.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>Hashes Create the Chain</h4>
+          <p>Each block contains the previous block's hash. Change one block, break the entire chain.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>Your Prototype Simulates It</h4>
+          <p>You're showing the concept and user experience—that's exactly what judges need to see.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h4>Production Is Straightforward</h4>
+          <p>Adding real blockchain integration is easy compared to the AI detection you've already built.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let blockChain = [];
+let blockCounter = 1;
+
+function generateHash(data) {
+  let hash = 0;
+  const str = JSON.stringify(data) + Date.now();
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(16).padStart(8, '0').substring(0, 8);
+}
+
+function createBlock() {
+  const output = document.getElementById('demoOutput');
+  output.classList.add('visible');
+
+  const previousHash = blockChain.length > 0
+    ? blockChain[blockChain.length - 1].hash
+    : '00000000';
+
+  const newBlock = {
+    id: blockCounter++,
+    data: `Fraud detection #${blockCounter - 1}: AI voice clone detected (${Math.floor(Math.random() * 15 + 85)}% confidence)`,
+    timestamp: new Date().toLocaleString(),
+    previousHash: previousHash,
+    hash: ''
+  };
+
+  newBlock.hash = generateHash(newBlock);
+  blockChain.push(newBlock);
+
+  output.innerHTML = `
+<div style="color: var(--success); font-weight: 700; margin-bottom: 1rem;">✅ Block #${newBlock.id} Added to Chain!</div>
+<div style="margin-bottom: 0.5rem;"><strong>Data:</strong> ${newBlock.data}</div>
+<div style="margin-bottom: 0.5rem;"><strong>Hash:</strong> <span class="hash">${newBlock.hash}</span></div>
+<div style="margin-bottom: 0.5rem;"><strong>Previous Hash:</strong> <span class="hash">${newBlock.previousHash}</span></div>
+<div style="margin-bottom: 0.5rem;"><strong>Timestamp:</strong> ${newBlock.timestamp}</div>
+<div style="margin-top: 1rem; color: var(--text-dim);">Chain now has ${blockChain.length} block(s). Try tampering with past data!</div>
+  `;
+}
+
+function tamperBlock() {
+  const output = document.getElementById('demoOutput');
+  output.classList.add('visible');
+
+  if (blockChain.length === 0) {
+    output.innerHTML = `
+<div style="color: var(--warning); font-weight: 700; margin-bottom: 1rem;">⚠️ No Blocks to Tamper With</div>
+<div>Add some blocks to the chain first, then try tampering!</div>
+    `;
+    return;
+  }
+
+  const targetBlock = blockChain[0];
+  const oldHash = targetBlock.hash;
+  targetBlock.data = "TAMPERED: Changed to 0% confidence!";
+  const newHash = generateHash(targetBlock);
+
+  output.innerHTML = `
+<div style="color: var(--danger); font-weight: 700; margin-bottom: 1rem;">🚨 TAMPERING DETECTED!</div>
+<div style="margin-bottom: 1rem;">You tried to change Block #${targetBlock.id}'s data...</div>
+
+<div style="background: var(--surface-2); padding: 1rem; border-radius: 4px; margin: 1rem 0;">
+  <div style="margin-bottom: 0.5rem;"><strong>Original Hash:</strong> <span class="hash">${oldHash}</span></div>
+  <div><strong>New Hash:</strong> <span class="hash">${newHash}</span></div>
+</div>
+
+<div style="margin: 1rem 0; color: var(--danger);">❌ <strong>CHAIN BROKEN!</strong></div>
+<div style="color: var(--text-dim);">Block #2 still references the old hash (${oldHash}), but Block #1 now has a different hash (${newHash}). The chain is invalid and everyone can see it was tampered with!</div>
+
+<div style="margin-top: 1.5rem; padding: 1rem; background: var(--surface-2); border-radius: 4px; border-left: 4px solid var(--danger);">
+  <strong>This is why blockchain prevents fraud:</strong> You can't change past records without breaking the entire chain and alerting everyone.
+</div>
+  `;
+}
+
+function resetDemo() {
+  blockChain = [];
+  blockCounter = 1;
+  const output = document.getElementById('demoOutput');
+  output.innerHTML = `
+<div style="color: var(--text-dim);">Demo reset. Add blocks to start a new chain!</div>
+  `;
+}
+</script>

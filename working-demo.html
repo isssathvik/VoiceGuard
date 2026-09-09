@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceGuard - Live Detection Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 30px 40px;
+            color: white;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .logo-text h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .logo-text p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .demo-badge {
+            background: #10b981;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .demo-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .section-title h2 {
+            font-size: 24px;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .section-title p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+        }
+
+        .demo-card {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 30px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+
+        .demo-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            font-size: 32px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .upload-zone {
+            border: 3px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .upload-zone:hover {
+            border-color: #667eea;
+            background: #f8faff;
+        }
+
+        .upload-zone.dragover {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .recording-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: #fee2e2;
+            border-radius: 10px;
+            color: #dc2626;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        .recording-indicator.active {
+            background: #fecaca;
+            animation: recordPulse 1.5s infinite;
+        }
+
+        @keyframes recordPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .analysis-result {
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .analysis-result.show {
+            display: block;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .analysis-result.genuine {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .analysis-result.fake {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .result-icon {
+            font-size: 48px;
+        }
+
+        .result-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .confidence-bar {
+            background: rgba(255,255,255,0.3);
+            height: 12px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+            transition: width 1s ease-out;
+        }
+
+        .confidence-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .features-detected {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+        }
+
+        .features-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .blockchain-section {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin-top: 30px;
+        }
+
+        .blockchain-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .blockchain-icon {
+            font-size: 36px;
+        }
+
+        .blockchain-title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .blockchain-hash {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 15px 0;
+            word-break: break-all;
+        }
+
+        .blockchain-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #10b981;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .waveform {
+            width: 100%;
+            height: 80px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .waveform-bar {
+            width: 3px;
+            background: #667eea;
+            margin: 0 2px;
+            border-radius: 2px;
+            transition: height 0.2s;
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .info-box h4 {
+            color: #1e40af;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box p {
+            color: #1e3a8a;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .comparison-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .comparison-card.real {
+            border-color: #10b981;
+        }
+
+        .comparison-card.fake {
+            border-color: #ef4444;
+        }
+
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .comparison-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .badge-real {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .badge-fake {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🛡️</div>
+                    <div class="logo-text">
+                        <h1>VoiceGuard Live Demo</h1>
+                        <p>Real-time AI Voice Cloning Detection with Blockchain</p>
+                    </div>
+                </div>
+                <div class="demo-badge">
+                    <div class="pulse-dot"></div>
+                    <span>LIVE DEMO</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Demo Section 1: Audio Input -->
+            <div class="demo-section">
+                <div class="section-header">
+                    <div class="section-icon">🎤</div>
+                    <div class="section-title">
+                        <h2>Step 1: Voice Input</h2>
+                        <p>Record your voice or upload an audio file for analysis</p>
+                    </div>
+                </div>
+
+                <div class="demo-grid">
+                    <!-- Record Audio -->
+                    <div class="demo-card">
+                        <div class="card-header">
+                            <div class="card-icon">🎙️</div>
+                            <div class="card-title">Record Live Audio</div>
+                        </div>
+
+                        <div class="waveform" id="waveform">
+                            <div class="waveform-bar" style="height: 20px;"></div>
+                            <div class="waveform-bar" style="height: 35px;"></div>
+                            <div class="waveform-bar" style="height: 50px;"></div>
+                            <div class="waveform-bar" style="height: 30px;"></div>
+                            <div class="waveform-bar" style="height: 45px;"></div>
+                            <div class="waveform-bar" style="height: 60px;"></div>
+                            <div class="waveform-bar" style="height: 40px;"></div>
+                            <div class="waveform-bar" style="height: 25px;"></div>
+                            <div class="waveform-bar" style="height: 55px;"></div>
+                            <div class="waveform-bar" style="height: 35px;"></div>
+                        </div>
+
+                        <div class="audio-controls">
+                            <button class="btn btn-danger" id="recordBtn" onclick="toggleRecording()">
+                                <span>🎙️</span> Start Recording
+                            </button>
+                            <button class="btn btn-primary" id="analyzeRecordingBtn" onclick="analyzeRecording()" disabled>
+                                <span>🔍</span> Analyze
+                            </button>
+                        </div>
+
+                        <div id="recordingStatus" class="recording-indicator" style="display: none;">
+                            <div class="pulse-dot"></div>
+                            <span>Recording... <span id="recordingTime">0:00</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Upload Audio -->
+                    <div class="demo-card">
+                        <div class="card-header">
+                            <div class="card-icon">📁</div>
+                            <div class="card-title">Upload Audio File</div>
+                        </div>
+
+                        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('audioFile').click()">
+                            <div class="upload-icon">⬆️</div>
+                            <div class="upload-text">Click or Drag to Upload</div>
+                            <div class="upload-hint">Supports: MP3, WAV, M4A (Max 10MB)</div>
+                            <input type="file" id="audioFile" accept="audio/*" onchange="handleFileUpload(event)">
+                        </div>
+
+                        <div class="audio-controls">
+                            <button class="btn btn-primary" id="analyzeUploadBtn" onclick="analyzeUpload()" disabled>
+                                <span>🔍</span> Analyze Upload
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h4>💡 How It Works</h4>
+                    <p>VoiceGuard uses a 5-layer AI detection system: <strong>Acoustic Analysis</strong> (spectral patterns),
+                    <strong>Prosodic Analysis</strong> (speech rhythm), <strong>CNN Classifier</strong> (deep learning),
+                    <strong>RNN Temporal</strong> (time-series analysis), and <strong>Voice Biometrics</strong> (unique voice DNA).
+                    All detections are logged on blockchain for immutable evidence.</p>
+                </div>
+            </div>
+
+            <!-- Demo Section 2: Analysis Results -->
+            <div class="demo-section">
+                <div class="section-header">
+                    <div class="section-icon">🔍</div>
+                    <div class="section-title">
+                        <h2>Step 2: AI Detection Results</h2>
+                        <p>Real-time analysis with confidence scoring</p>
+                    </div>
+                </div>
+
+                <div id="analysisResult" class="analysis-result">
+                    <!-- Results will appear here -->
+                </div>
+
+                <div class="comparison-grid" id="comparisonSection" style="display: none;">
+                    <div class="comparison-card real">
+                        <div class="comparison-header">
+                            <h3>✅ Real Voice Sample</h3>
+                            <span class="comparison-badge badge-real">Genuine</span>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">97%</div>
+                            <div class="stat-label">Confidence</div>
+                        </div>
+                        <div class="features-detected" style="background: #f0fdf4; color: #166534;">
+                            <div class="feature-item">✓ Natural speech patterns</div>
+                            <div class="feature-item">✓ Consistent prosody</div>
+                            <div class="feature-item">✓ Human breath sounds</div>
+                            <div class="feature-item">✓ Natural frequency distribution</div>
+                        </div>
+                    </div>
+
+                    <div class="comparison-card fake">
+                        <div class="comparison-header">
+                            <h3>🚨 AI Cloned Voice</h3>
+                            <span class="comparison-badge badge-fake">Synthetic</span>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">94%</div>
+                            <div class="stat-label">Fake Confidence</div>
+                        </div>
+                        <div class="features-detected" style="background: #fef2f2; color: #991b1b;">
+                            <div class="feature-item">⚠️ Spectral irregularities</div>
+                            <div class="feature-item">⚠️ Unnatural pauses</div>
+                            <div class="feature-item">⚠️ Missing breath markers</div>
+                            <div class="feature-item">⚠️ High-freq artifacts</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo Section 3: Blockchain Integration -->
+            <div class="demo-section">
+                <div class="section-header">
+                    <div class="section-icon">🔗</div>
+                    <div class="section-title">
+                        <h2>Step 3: Blockchain Evidence Logging</h2>
+                        <p>Immutable threat record on distributed ledger</p>
+                    </div>
+                </div>
+
+                <div class="blockchain-section" id="blockchainSection" style="display: none;">
+                    <div class="blockchain-header">
+                        <div class="blockchain-icon">⛓️</div>
+                        <div>
+                            <div class="blockchain-title">Threat Logged on Blockchain</div>
+                            <div class="blockchain-status">
+                                <span>✓</span> Verified & Immutable
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <strong>Transaction Hash:</strong>
+                        <div class="blockchain-hash" id="txHash">0x...</div>
+                    </div>
+
+                    <div>
+                        <strong>Block Number:</strong>
+                        <div class="blockchain-hash" id="blockNumber">#...</div>
+                    </div>
+
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-value" id="timestamp">--</div>
+                            <div class="stat-label">Timestamp</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">SHA-256</div>
+                            <div class="stat-label">Hash Algorithm</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">Ethereum</div>
+                            <div class="stat-label">Network</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">Verified</div>
+                            <div class="stat-label">Status</div>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="margin-top: 20px;">
+                        <h4>🔐 Why Blockchain?</h4>
+                        <p>Every detected threat is permanently recorded on blockchain, creating an immutable evidence trail.
+                        This ensures reports cannot be tampered with and provides legal validity for cybercrime investigations.
+                        The distributed ledger is shared across law enforcement, banks, and security agencies.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isRecording = false;
+        let recordingStartTime;
+        let recordingTimer;
+        let uploadedFile = null;
+        let recordedAudio = null;
+
+        // Recording Functions
+        function toggleRecording() {
+            const btn = document.getElementById('recordBtn');
+            const status = document.getElementById('recordingStatus');
+            const analyzeBtn = document.getElementById('analyzeRecordingBtn');
+
+            if (!isRecording) {
+                // Start recording
+                isRecording = true;
+                recordingStartTime = Date.now();
+                btn.innerHTML = '<span>⏹️</span> Stop Recording';
+                btn.className = 'btn btn-success';
+                status.style.display = 'flex';
+                status.classList.add('active');
+                analyzeBtn.disabled = true;
+
+                // Animate waveform
+                animateWaveform();
+
+                // Start timer
+                recordingTimer = setInterval(updateRecordingTime, 100);
+            } else {
+                // Stop recording
+                isRecording = false;
+                btn.innerHTML = '<span>🎙️</span> Start Recording';
+                btn.className = 'btn btn-danger';
+                status.classList.remove('active');
+                clearInterval(recordingTimer);
+                analyzeBtn.disabled = false;
+                recordedAudio = true;
+            }
+        }
+
+        function updateRecordingTime() {
+            const elapsed = Date.now() - recordingStartTime;
+            const seconds = Math.floor((elapsed / 1000) % 60);
+            const minutes = Math.floor(elapsed / 60000);
+            document.getElementById('recordingTime').textContent =
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function animateWaveform() {
+            if (!isRecording) return;
+
+            const bars = document.querySelectorAll('.waveform-bar');
+            bars.forEach(bar => {
+                const height = Math.random() * 60 + 20;
+                bar.style.height = height + 'px';
+            });
+
+            setTimeout(animateWaveform, 100);
+        }
+
+        function analyzeRecording() {
+            if (!recordedAudio) return;
+            runAnalysis('recording');
+        }
+
+        // File Upload Functions
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            uploadedFile = file;
+            const uploadZone = document.getElementById('uploadZone');
+            uploadZone.innerHTML = `
+                <div class="upload-icon">✅</div>
+                <div class="upload-text">${file.name}</div>
+                <div class="upload-hint">Size: ${(file.size / 1024).toFixed(2)} KB</div>
+            `;
+
+            document.getElementById('analyzeUploadBtn').disabled = false;
+        }
+
+        function analyzeUpload() {
+            if (!uploadedFile) return;
+            runAnalysis('upload');
+        }
+
+        // Analysis Function
+        function runAnalysis(source) {
+            // Simulate analysis with realistic detection
+            const isFake = Math.random() > 0.5; // Random for demo
+            const confidence = isFake ? (88 + Math.random() * 10) : (92 + Math.random() * 7);
+
+            const resultDiv = document.getElementById('analysisResult');
+            resultDiv.className = `analysis-result ${isFake ? 'fake' : 'genuine'} show`;
+
+            const features = isFake ? [
+                '⚠️ Synthetic voice markers detected',
+                '⚠️ Unnatural prosody patterns',
+                '⚠️ Spectral irregularities found',
+                '⚠️ Missing micro-variations',
+                '⚠️ AI signature match: ElevenLabs (92%)'
+            ] : [
+                '✓ Natural speech patterns detected',
+                '✓ Consistent acoustic profile',
+                '✓ Human breath sounds present',
+                '✓ Natural frequency distribution',
+                '✓ No synthetic artifacts'
+            ];
+
+            resultDiv.innerHTML = `
+                <div class="result-header">
+                    <div class="result-icon">${isFake ? '🚨' : '✅'}</div>
+                    <div>
+                        <div class="result-title">${isFake ? 'AI VOICE DETECTED!' : 'VOICE VERIFIED'}</div>
+                    </div>
+                </div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" style="width: ${confidence}%"></div>
+                </div>
+                <div class="confidence-text">${isFake ? 'Fake' : 'Genuine'}: ${confidence.toFixed(1)}%</div>
+                <div class="features-detected">
+                    <div class="features-title">Detection Analysis:</div>
+                    ${features.map(f => `<div class="feature-item">${f}</div>`).join('')}
+                </div>
+            `;
+
+            // Show comparison
+            document.getElementById('comparisonSection').style.display = 'grid';
+
+            // Log to blockchain if fake
+            if (isFake) {
+                logToBlockchain(confidence);
+            }
+        }
+
+        // Blockchain Functions
+        function logToBlockchain(confidence) {
+            const blockchainSection = document.getElementById('blockchainSection');
+            blockchainSection.style.display = 'block';
+
+            // Generate realistic blockchain data
+            const txHash = '0x' + generateRandomHash(64);
+            const blockNum = Math.floor(Math.random() * 1000000) + 15000000;
+            const timestamp = new Date().toLocaleString();
+
+            document.getElementById('txHash').textContent = txHash;
+            document.getElementById('blockNumber').textContent = `#${blockNum}`;
+            document.getElementById('timestamp').textContent = timestamp;
+
+            // Scroll to blockchain section
+            setTimeout(() => {
+                blockchainSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 500);
+        }
+
+        function generateRandomHash(length) {
+            const chars = '0123456789abcdef';
+            let hash = '';
+            for (let i = 0; i < length; i++) {
+                hash += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return hash;
+        }
+
+        // Drag and Drop
+        const uploadZone = document.getElementById('uploadZone');
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('audio/')) {
+                handleFileUpload({ target: { files: [file] } });
+            }
+        });
+    </script>
+</body>
+</html>

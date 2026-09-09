@@ -1,0 +1,650 @@
+<title>VoiceGuard AI Detection Demo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg-primary: #0a0e1a;
+    --bg-secondary: #141824;
+    --bg-card: #1a1f2e;
+    --border: #2d3548;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --accent-safe: #10b981;
+    --accent-danger: #ef4444;
+    --accent-warning: #f59e0b;
+    --accent-cyan: #06b6d4;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 2rem;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-safe));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+  }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .demo-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .demo-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-safe));
+  }
+
+  .demo-card.danger::before {
+    background: linear-gradient(90deg, var(--accent-danger), var(--accent-warning));
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .icon-badge {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+  }
+
+  .icon-badge.safe {
+    background: rgba(16, 185, 129, 0.15);
+    border: 2px solid rgba(16, 185, 129, 0.3);
+  }
+
+  .icon-badge.danger {
+    background: rgba(239, 68, 68, 0.15);
+    border: 2px solid rgba(239, 68, 68, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .card-title {
+    flex: 1;
+  }
+
+  .card-title h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .card-title .label {
+    font-size: 0.875rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-secondary);
+  }
+
+  .risk-gauge {
+    margin: 2rem 0;
+    text-align: center;
+  }
+
+  .gauge-value {
+    font-size: 4rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .gauge-value.safe {
+    color: var(--accent-safe);
+  }
+
+  .gauge-value.danger {
+    color: var(--accent-danger);
+  }
+
+  .gauge-label {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+
+  .progress-bar {
+    height: 8px;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 1rem 0;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1.5s ease-out;
+  }
+
+  .progress-fill.safe {
+    background: linear-gradient(90deg, var(--accent-safe), var(--accent-cyan));
+  }
+
+  .progress-fill.danger {
+    background: linear-gradient(90deg, var(--accent-danger), var(--accent-warning));
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .metric {
+    background: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .metric-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .detection-features {
+    margin-top: 2rem;
+  }
+
+  .features-title {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .feature-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .feature-icon.check {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--accent-safe);
+  }
+
+  .feature-icon.x {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--accent-danger);
+  }
+
+  .feature-text {
+    flex: 1;
+    font-size: 0.875rem;
+  }
+
+  .feature-badge {
+    padding: 0.25rem 0.625rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .feature-badge.normal {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--accent-safe);
+  }
+
+  .feature-badge.detected {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--accent-danger);
+  }
+
+  .comparison-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 3rem;
+  }
+
+  .comparison-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .comparison-item {
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  .comparison-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .comparison-values {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .comparison-values .original {
+    color: var(--accent-safe);
+    font-weight: 600;
+  }
+
+  .comparison-values .cloned {
+    color: var(--accent-danger);
+    font-weight: 600;
+  }
+
+  .play-button {
+    width: 100%;
+    padding: 0.875rem;
+    background: var(--accent-cyan);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 1rem;
+  }
+
+  .play-button:hover {
+    background: #0891b2;
+    transform: translateY(-1px);
+  }
+
+  .info-box {
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .info-box h3 {
+    margin-bottom: 1rem;
+    color: var(--accent-cyan);
+  }
+
+  .info-box ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .info-box li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .info-box li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent-cyan);
+  }
+</style>
+
+<div class="container">
+  <header>
+    <h1>VoiceGuard AI Detection Demo</h1>
+    <p class="subtitle">Real-time comparison: Original Human Voice vs AI-Cloned Voice (Chatterbox)</p>
+  </header>
+
+  <div class="demo-grid">
+    <!-- Original Voice Card -->
+    <div class="demo-card">
+      <div class="card-header">
+        <div class="icon-badge safe">✓</div>
+        <div class="card-title">
+          <h2>Original Human Voice</h2>
+          <p class="label">Genuine Speaker • Real Recording</p>
+        </div>
+      </div>
+
+      <div class="risk-gauge">
+        <div class="gauge-value safe" id="original-score">15</div>
+        <div class="gauge-label">AI Synthesis Probability (%)</div>
+        <div class="progress-bar">
+          <div class="progress-fill safe" style="width: 0%" id="original-bar"></div>
+        </div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric">
+          <div class="metric-label">Risk Score</div>
+          <div class="metric-value" style="color: var(--accent-safe);">18/100</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Risk Level</div>
+          <div class="metric-value" style="color: var(--accent-safe); font-size: 1.2rem;">SAFE</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Genuine Probability</div>
+          <div class="metric-value" style="color: var(--accent-safe);">85%</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Voice Match</div>
+          <div class="metric-value" style="color: var(--accent-safe);">92%</div>
+        </div>
+      </div>
+
+      <div class="detection-features">
+        <div class="features-title">Detection Analysis</div>
+        <div class="feature-item">
+          <div class="feature-icon check">✓</div>
+          <div class="feature-text">Prosody Anomaly</div>
+          <div class="feature-badge normal">NORMAL</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon check">✓</div>
+          <div class="feature-text">Spectral Artifacts</div>
+          <div class="feature-badge normal">CLEAN</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon check">✓</div>
+          <div class="feature-text">Phase Coherence</div>
+          <div class="feature-badge normal">NATURAL</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon check">✓</div>
+          <div class="feature-text">Pitch Jitter</div>
+          <div class="feature-badge normal">0.0186</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon check">✓</div>
+          <div class="feature-text">Temporal Consistency</div>
+          <div class="feature-badge normal">HUMAN</div>
+        </div>
+      </div>
+
+      <button class="play-button" onclick="playOriginal()">▶ Simulate Analysis</button>
+    </div>
+
+    <!-- Cloned Voice Card -->
+    <div class="demo-card danger">
+      <div class="card-header">
+        <div class="icon-badge danger">⚠</div>
+        <div class="card-title">
+          <h2>AI-Cloned Voice</h2>
+          <p class="label">Chatterbox Generated • Synthetic Audio</p>
+        </div>
+      </div>
+
+      <div class="risk-gauge">
+        <div class="gauge-value danger" id="cloned-score">89</div>
+        <div class="gauge-label">AI Synthesis Probability (%)</div>
+        <div class="progress-bar">
+          <div class="progress-fill danger" style="width: 0%" id="cloned-bar"></div>
+        </div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric">
+          <div class="metric-label">Risk Score</div>
+          <div class="metric-value" style="color: var(--accent-danger);">86/100</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Risk Level</div>
+          <div class="metric-value" style="color: var(--accent-danger); font-size: 1.2rem;">HIGH</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Genuine Probability</div>
+          <div class="metric-value" style="color: var(--accent-danger);">11%</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Voice Match</div>
+          <div class="metric-value" style="color: var(--accent-danger);">23%</div>
+        </div>
+      </div>
+
+      <div class="detection-features">
+        <div class="features-title">Detection Analysis</div>
+        <div class="feature-item">
+          <div class="feature-icon x">✕</div>
+          <div class="feature-text">Prosody Anomaly</div>
+          <div class="feature-badge detected">DETECTED</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon x">✕</div>
+          <div class="feature-text">Spectral Artifacts</div>
+          <div class="feature-badge detected">DETECTED</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon x">✕</div>
+          <div class="feature-text">Phase Coherence</div>
+          <div class="feature-badge detected">SUSPICIOUS</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon x">✕</div>
+          <div class="feature-text">Pitch Jitter</div>
+          <div class="feature-badge detected">0.0041</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon x">✕</div>
+          <div class="feature-text">Temporal Consistency</div>
+          <div class="feature-badge detected">ROBOTIC</div>
+        </div>
+      </div>
+
+      <button class="play-button" onclick="playCloned()">▶ Simulate Analysis</button>
+    </div>
+  </div>
+
+  <div class="comparison-section">
+    <h3 class="comparison-title">Side-by-Side Comparison</h3>
+    <div class="comparison-grid">
+      <div class="comparison-item">
+        <div class="comparison-label">AI Synthesis Probability</div>
+        <div class="comparison-values">
+          <span class="original">15%</span>
+          <span style="color: var(--text-secondary);">vs</span>
+          <span class="cloned">89%</span>
+        </div>
+      </div>
+      <div class="comparison-item">
+        <div class="comparison-label">Risk Score</div>
+        <div class="comparison-values">
+          <span class="original">18</span>
+          <span style="color: var(--text-secondary);">vs</span>
+          <span class="cloned">86</span>
+        </div>
+      </div>
+      <div class="comparison-item">
+        <div class="comparison-label">Pitch Jitter (Natural Variation)</div>
+        <div class="comparison-values">
+          <span class="original">0.0186</span>
+          <span style="color: var(--text-secondary);">vs</span>
+          <span class="cloned">0.0041</span>
+        </div>
+      </div>
+      <div class="comparison-item">
+        <div class="comparison-label">Spectral Artifacts</div>
+        <div class="comparison-values">
+          <span class="original">Clean</span>
+          <span style="color: var(--text-secondary);">vs</span>
+          <span class="cloned">Detected</span>
+        </div>
+      </div>
+      <div class="comparison-item">
+        <div class="comparison-label">Phase Coherence</div>
+        <div class="comparison-values">
+          <span class="original">Natural</span>
+          <span style="color: var(--text-secondary);">vs</span>
+          <span class="cloned">Suspicious</span>
+        </div>
+      </div>
+      <div class="comparison-item">
+        <div class="comparison-label">Prosody Pattern</div>
+        <div class="comparison-values">
+          <span class="original">Normal</span>
+          <span style="color: var(--text-secondary);">vs</span>
+          <span class="cloned">Anomaly</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <h3>🎯 How VoiceGuard Detects AI Cloning</h3>
+    <ul>
+      <li><strong>Prosody Analysis:</strong> AI voices have unnaturally smooth pitch transitions, while real voices have natural micro-variations</li>
+      <li><strong>Pitch Jitter:</strong> Human voices naturally fluctuate (0.015-0.04), while AI clones are too stable (< 0.012)</li>
+      <li><strong>Phase Coherence:</strong> AI-generated audio has suspiciously coherent phase patterns across frequencies</li>
+      <li><strong>Spectral Artifacts:</strong> Voice cloning tools leave subtle frequency domain artifacts that real voices don't have</li>
+      <li><strong>Temporal Consistency:</strong> AI lacks the organic micro-variations in timing that humans naturally produce</li>
+      <li><strong>Harmonic Structure:</strong> AI voices are often "too perfect" with unnaturally clean harmonic relationships</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function animateValue(element, start, end, duration) {
+    const startTime = performance.now();
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const current = start + (end - start) * easeOutQuart;
+
+      element.textContent = Math.round(current);
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  function playOriginal() {
+    const scoreEl = document.getElementById('original-score');
+    const barEl = document.getElementById('original-bar');
+
+    animateValue(scoreEl, 0, 15, 2000);
+    setTimeout(() => {
+      barEl.style.width = '15%';
+    }, 100);
+  }
+
+  function playCloned() {
+    const scoreEl = document.getElementById('cloned-score');
+    const barEl = document.getElementById('cloned-bar');
+
+    animateValue(scoreEl, 0, 89, 2000);
+    setTimeout(() => {
+      barEl.style.width = '89%';
+    }, 100);
+  }
+
+  // Auto-animate on load
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      playOriginal();
+      playCloned();
+    }, 500);
+  });
+</script>

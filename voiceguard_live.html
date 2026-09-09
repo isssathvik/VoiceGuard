@@ -1,0 +1,518 @@
+<title>VoiceGuard Detection Interface</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg-base: #0a0f1e;
+    --bg-elevated: #151b2e;
+    --bg-input: #1e2738;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-tertiary: #64748b;
+    --accent-safe: #06b6d4;
+    --accent-danger: #dc2626;
+    --border: #334155;
+    --border-active: #475569;
+}
+
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+        --bg-base: #ffffff;
+        --bg-elevated: #f8fafc;
+        --bg-input: #f1f5f9;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-tertiary: #64748b;
+        --border: #e2e8f0;
+        --border-active: #cbd5e1;
+    }
+}
+
+:root[data-theme="light"] {
+    --bg-base: #ffffff;
+    --bg-elevated: #f8fafc;
+    --bg-input: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #64748b;
+    --border: #e2e8f0;
+    --border-active: #cbd5e1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.5;
+    padding: 3rem 1.5rem;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+header {
+    margin-bottom: 3rem;
+}
+
+h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+.status-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.8125rem;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-safe);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.status-indicator.offline {
+    background: var(--text-tertiary);
+    animation: none;
+}
+
+.upload-zone {
+    background: var(--bg-elevated);
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 2.5rem;
+}
+
+.upload-zone:hover {
+    border-color: var(--border-active);
+    background: var(--bg-input);
+}
+
+.upload-zone.dragover {
+    border-color: var(--accent-safe);
+    background: var(--bg-input);
+}
+
+.upload-zone input {
+    display: none;
+}
+
+.upload-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+}
+
+.upload-text {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.upload-hint {
+    color: var(--text-tertiary);
+    font-size: 0.875rem;
+}
+
+.results {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.result-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.file-name {
+    font-weight: 600;
+    word-break: break-word;
+    flex: 1;
+}
+
+.verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.verdict-safe {
+    background: rgba(6, 182, 212, 0.15);
+    color: var(--accent-safe);
+}
+
+.verdict-threat {
+    background: rgba(220, 38, 38, 0.15);
+    color: var(--accent-danger);
+}
+
+.confidence-section {
+    margin-bottom: 1.5rem;
+}
+
+.confidence-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+}
+
+.confidence-label-text {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.confidence-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.confidence-bar {
+    height: 8px;
+    background: var(--bg-input);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.confidence-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.confidence-fill-safe {
+    background: var(--accent-safe);
+}
+
+.confidence-fill-threat {
+    background: var(--accent-danger);
+}
+
+.details-grid {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+}
+
+.detail-label {
+    font-size: 0.875rem;
+    color: var(--text-tertiary);
+}
+
+.detail-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+.loading {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent-safe);
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.error {
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid var(--accent-danger);
+    color: var(--accent-danger);
+    padding: 1rem 1.25rem;
+    border-radius: 6px;
+    font-size: 0.9375rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .result-card,
+    .confidence-fill,
+    .spinner,
+    .status-indicator {
+        animation: none;
+        transition: none;
+    }
+}
+</style>
+
+<div class="container">
+    <header>
+        <h1>🛡️ VoiceGuard Detection Interface</h1>
+        <p class="subtitle">AI Voice Cloning Detection System — Real-time Threat Assessment</p>
+        <div class="status-bar">
+            <div class="status-indicator" id="statusIndicator"></div>
+            <span id="statusText">Connecting to backend...</span>
+        </div>
+    </header>
+
+    <label class="upload-zone" id="uploadZone" for="audioInput">
+        <div class="upload-icon">📂</div>
+        <div class="upload-text">Upload Audio Files</div>
+        <div class="upload-hint">WAV, MP3, M4A supported • Multiple files accepted</div>
+        <input type="file" id="audioInput" accept=".wav,.mp3,.m4a" multiple>
+    </label>
+
+    <div class="results" id="results"></div>
+</div>
+
+<script>
+const API_URL = 'http://localhost:5001';
+const fileInput = document.getElementById('audioInput');
+const uploadZone = document.getElementById('uploadZone');
+const resultsContainer = document.getElementById('results');
+const statusIndicator = document.getElementById('statusIndicator');
+const statusText = document.getElementById('statusText');
+
+// Check backend health
+async function checkBackendHealth() {
+    try {
+        const response = await fetch(`${API_URL}/api/health`);
+        const data = await response.json();
+
+        if (data.model_loaded) {
+            statusIndicator.classList.remove('offline');
+            statusText.textContent = 'Backend connected • Model ready';
+        } else {
+            statusIndicator.classList.add('offline');
+            statusText.textContent = 'Backend connected • Model not loaded';
+        }
+    } catch (error) {
+        statusIndicator.classList.add('offline');
+        statusText.textContent = 'Backend offline • Start api_server.py';
+    }
+}
+
+// Initial health check
+checkBackendHealth();
+setInterval(checkBackendHealth, 10000); // Check every 10 seconds
+
+// Drag and drop support
+uploadZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.classList.add('dragover');
+});
+
+uploadZone.addEventListener('dragleave', () => {
+    uploadZone.classList.remove('dragover');
+});
+
+uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+        analyzeFiles(files);
+    }
+});
+
+fileInput.addEventListener('change', (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+        analyzeFiles(files);
+    }
+});
+
+async function analyzeFiles(files) {
+    resultsContainer.innerHTML = `
+        <div class="loading">
+            <div class="spinner"></div>
+            <div class="loading-text">Analyzing ${files.length} audio file${files.length > 1 ? 's' : ''} with ML model...</div>
+        </div>
+    `;
+
+    const formData = new FormData();
+    files.forEach(file => formData.append('files', file));
+
+    try {
+        const response = await fetch(`${API_URL}/api/analyze`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server returned ${response.status}`);
+        }
+
+        const data = await response.json();
+        displayResults(data.results);
+    } catch (error) {
+        resultsContainer.innerHTML = `
+            <div class="error">
+                <strong>Analysis failed:</strong> ${error.message}<br>
+                <br>
+                Make sure the Flask backend is running:<br>
+                <code style="background: rgba(0,0,0,0.2); padding: 0.25rem 0.5rem; border-radius: 4px; display: inline-block; margin-top: 0.5rem;">
+                    python api_server.py
+                </code>
+            </div>
+        `;
+    }
+
+    // Reset file input
+    fileInput.value = '';
+}
+
+function displayResults(results) {
+    resultsContainer.innerHTML = '';
+
+    results.forEach((result, index) => {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.style.animationDelay = `${index * 0.1}s`;
+
+        if (result.error) {
+            card.innerHTML = `
+                <div class="error">
+                    <strong>${escapeHtml(result.fileName)}</strong><br>
+                    ${escapeHtml(result.error)}
+                </div>
+            `;
+        } else {
+            const verdictClass = result.isReal ? 'verdict-safe' : 'verdict-threat';
+            const verdictText = result.prediction;
+            const verdictIcon = result.isReal ? '✓' : '⚠';
+            const fillClass = result.isReal ? 'confidence-fill-safe' : 'confidence-fill-threat';
+
+            card.innerHTML = `
+                <div class="result-header">
+                    <div class="file-name">${escapeHtml(result.fileName)}</div>
+                    <div class="verdict ${verdictClass}">${verdictIcon} ${verdictText}</div>
+                </div>
+
+                <div class="confidence-section">
+                    <div class="confidence-label">
+                        <span class="confidence-label-text">Detection Confidence</span>
+                        <span class="confidence-value">${result.confidence}<span style="font-size: 1rem; color: var(--text-secondary);">/100</span></span>
+                    </div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill ${fillClass}" style="width: ${result.confidence}%"></div>
+                    </div>
+                </div>
+
+                <div class="details-grid">
+                    <div class="detail-row">
+                        <span class="detail-label">File Size</span>
+                        <span class="detail-value">${result.fileSize} KB</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">MFCC Mean</span>
+                        <span class="detail-value">${result.features.mfccMean}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Spectral Centroid</span>
+                        <span class="detail-value">${result.features.spectralCentroid} Hz</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Zero Crossing Rate</span>
+                        <span class="detail-value">${result.features.zeroCrossingRate}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Spectral Rolloff</span>
+                        <span class="detail-value">${result.features.spectralRolloff} Hz</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        resultsContainer.appendChild(card);
+    });
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+</script>

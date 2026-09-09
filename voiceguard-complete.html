@@ -1,0 +1,1755 @@
+<title>VoiceGuard - AI Voice Scam Detection</title>
+<style>
+:root {
+    --bg: #ffffff;
+    --surface: #f8fafc;
+    --surface-elevated: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-secondary: #64748b;
+    --accent: #667eea;
+    --accent-hover: #5568d3;
+    --success: #10b981;
+    --success-bg: #d1fae5;
+    --warning: #f59e0b;
+    --warning-bg: #fef3c7;
+    --danger: #ef4444;
+    --danger-bg: #fee2e2;
+    --dark: #1e293b;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #0f172a;
+        --surface: #1e293b;
+        --surface-elevated: #334155;
+        --border: #475569;
+        --text: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --success-bg: #065f46;
+        --warning-bg: #78350f;
+        --danger-bg: #7f1d1d;
+    }
+}
+
+:root[data-theme="dark"] {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface-elevated: #334155;
+    --border: #475569;
+    --text: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --success-bg: #065f46;
+    --warning-bg: #78350f;
+    --danger-bg: #7f1d1d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+/* Landing Page Styles */
+.landing {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: white;
+}
+
+.landing-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.landing-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.landing-hero {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 6rem 2rem 4rem;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    text-wrap: balance;
+}
+
+.hero-subtitle {
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    opacity: 0.95;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    text-wrap: balance;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: white;
+    color: #667eea;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.btn-secondary {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.flow-visual {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    max-width: 900px;
+    margin: 4rem auto;
+}
+
+.flow-steps {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.flow-step {
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+}
+
+.flow-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.flow-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.flow-arrow {
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.features-section {
+    padding: 6rem 2rem;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    color: var(--text);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.feature-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+}
+
+.feature-description {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+/* Dashboard Layout */
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    gap: 20px;
+}
+
+.sidebar {
+    background: var(--surface-elevated);
+    border-radius: 16px;
+    padding: 1.5rem;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 1rem;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.nav-section {
+    margin-bottom: 1.5rem;
+}
+
+.nav-section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-align: left;
+    width: 100%;
+    margin-bottom: 0.25rem;
+}
+
+.nav-btn:hover {
+    background: var(--surface);
+    color: var(--text);
+}
+
+.nav-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.main-content {
+    background: var(--surface-elevated);
+    border-radius: 16px;
+    padding: 2rem;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Status Card */
+.status-card {
+    background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    color: white;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.status-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.status-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+/* Demo Screens */
+.demo-screen {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.call-incoming {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.caller-info {
+    margin-bottom: 2rem;
+}
+
+.caller-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+}
+
+.caller-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+}
+
+.caller-number {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.analyzing {
+    margin: 2rem 0;
+}
+
+.analyzing-text {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    animation: progress 2s ease-in-out;
+    border-radius: 10px;
+}
+
+@keyframes progress {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+/* Analysis Result */
+.analysis-result {
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    animation: slideIn 0.5s;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.analysis-result.safe {
+    background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+    color: white;
+}
+
+.analysis-result.critical {
+    background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+    color: white;
+}
+
+.result-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.result-icon {
+    font-size: 4rem;
+}
+
+.result-title {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.risk-score {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin: 1.5rem 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.threats-list {
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.threats-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.threat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9375rem;
+}
+
+.features-detected {
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9375rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn-large {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+}
+
+/* Explainability */
+.explainability-section {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.explainability-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+}
+
+.risk-breakdown {
+    margin-bottom: 2rem;
+}
+
+.risk-factor {
+    margin-bottom: 1.5rem;
+}
+
+.factor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.factor-name {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.factor-value {
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}
+
+.factor-bar {
+    height: 10px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.factor-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    transition: width 1s ease-out;
+}
+
+.reasons-list {
+    margin-top: 2rem;
+}
+
+.reason-item {
+    display: flex;
+    align-items: start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+}
+
+.reason-item.critical {
+    background: var(--danger-bg);
+}
+
+.reason-item.warning {
+    background: var(--warning-bg);
+}
+
+.reason-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.reason-text {
+    font-size: 0.9375rem;
+    color: var(--text);
+}
+
+/* Table */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.data-table thead {
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+}
+
+.data-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.875rem;
+}
+
+.data-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+}
+
+.risk-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.risk-badge.safe {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.risk-badge.critical {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.risk-badge.high {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.9375rem;
+}
+
+.form-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+}
+
+/* Success Message */
+.success-message {
+    background: var(--success-bg);
+    color: var(--success);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Contacts */
+.contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.contact-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.contact-icon {
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+}
+
+.contact-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+}
+
+.contact-phone {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.contact-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .flow-steps {
+        flex-direction: column;
+    }
+
+    .flow-arrow {
+        transform: rotate(90deg);
+    }
+}
+
+.hidden {
+    display: none;
+}
+</style>
+
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+
+<script>
+const { useState, useEffect } = React;
+const { createRoot } = ReactDOM;
+
+// Mock Database
+const mockDatabase = {
+    calls: [
+        { id: 1, caller: 'Dad - Mobile', phone: '+91 98765 43210', date: '2026-09-04 11:23', duration: '3m 12s', riskScore: 3, riskLevel: 'safe', threat: 'None' },
+        { id: 2, caller: 'Unknown Caller', phone: '+1 555 0123', date: '2026-09-04 10:15', duration: '2m 34s', riskScore: 94, riskLevel: 'critical', threat: 'Voice Cloning, Financial Fraud' },
+        { id: 3, caller: 'Bank Support', phone: '+91 22 1234 5678', date: '2026-09-03 16:45', duration: '5m 21s', riskScore: 87, riskLevel: 'high', threat: 'Suspicious Behavior' },
+        { id: 4, caller: 'Mom - Mobile', phone: '+91 98765 43211', date: '2026-09-03 09:30', duration: '8m 45s', riskScore: 2, riskLevel: 'safe', threat: 'None' },
+    ],
+    contacts: [
+        { id: 1, name: 'Dad', phone: '+91 98765 43210', relationship: 'Family', trusted: true, icon: '👨' },
+        { id: 2, name: 'Mom', phone: '+91 98765 43211', relationship: 'Family', trusted: true, icon: '👩' },
+        { id: 3, name: 'Office', phone: '+91 11 2345 6789', relationship: 'Work', trusted: true, icon: '💼' },
+    ],
+    statistics: {
+        totalCalls: 18,
+        safeCalls: 16,
+        suspiciousCalls: 2,
+        blockedCalls: 2,
+        avgRiskScore: 27,
+        threatsDetected: 6
+    }
+};
+
+function App() {
+    const [currentPage, setCurrentPage] = useState('landing');
+    const [demoState, setDemoState] = useState(null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [analysisComplete, setAnalysisComplete] = useState(false);
+    const [reportSubmitted, setReportSubmitted] = useState(false);
+
+    const startDemo = (type) => {
+        setCurrentPage('dashboard');
+        setTimeout(() => runDemo(type), 500);
+    };
+
+    const runDemo = (type) => {
+        setDemoState(null);
+        setIsAnalyzing(false);
+        setAnalysisComplete(false);
+        setReportSubmitted(false);
+
+        if (type === 'safe') {
+            setDemoState({
+                caller: 'Dad - Mobile',
+                phone: '+91 98765 43210',
+                icon: '👨',
+                type: 'safe'
+            });
+            setCurrentPage('safe-demo');
+            setTimeout(() => {
+                setIsAnalyzing(true);
+                setTimeout(() => {
+                    setIsAnalyzing(false);
+                    setAnalysisComplete(true);
+                }, 2000);
+            }, 500);
+        } else if (type === 'fake') {
+            setDemoState({
+                caller: 'Unknown Caller',
+                phone: '+1 555 0123',
+                icon: '❓',
+                type: 'fake'
+            });
+            setCurrentPage('fake-demo');
+            setTimeout(() => {
+                setIsAnalyzing(true);
+                setTimeout(() => {
+                    setIsAnalyzing(false);
+                    setAnalysisComplete(true);
+                }, 2500);
+            }, 500);
+        } else if (type === 'sih') {
+            // Full SIH demo flow
+            setDemoState({
+                caller: 'Bank Manager',
+                phone: '+1 555 9999',
+                icon: '🏦',
+                type: 'fake'
+            });
+            setCurrentPage('fake-demo');
+            setTimeout(() => {
+                setIsAnalyzing(true);
+                setTimeout(() => {
+                    setIsAnalyzing(false);
+                    setAnalysisComplete(true);
+                }, 2500);
+            }, 500);
+        }
+    };
+
+    const submitReport = () => {
+        setReportSubmitted(true);
+    };
+
+    const renderContent = () => {
+        switch (currentPage) {
+            case 'landing':
+                return React.createElement(LandingPage, { onStartDemo: startDemo, onNavigate: setCurrentPage });
+            case 'dashboard':
+                return React.createElement(Dashboard, { onDemo: runDemo });
+            case 'safe-demo':
+                return React.createElement(SafeCallDemo, {
+                    demoState,
+                    isAnalyzing,
+                    analysisComplete
+                });
+            case 'fake-demo':
+                return React.createElement(FakeCallDemo, {
+                    demoState,
+                    isAnalyzing,
+                    analysisComplete
+                });
+            case 'report':
+                return React.createElement(ReportScreen, {
+                    reportSubmitted,
+                    onSubmit: submitReport
+                });
+            case 'statistics':
+                return React.createElement(Statistics);
+            case 'contacts':
+                return React.createElement(Contacts);
+            case 'call-history':
+                return React.createElement(CallHistory);
+            case 'settings':
+                return React.createElement(Settings);
+            default:
+                return React.createElement(Dashboard, { onDemo: runDemo });
+        }
+    };
+
+    if (currentPage === 'landing') {
+        return renderContent();
+    }
+
+    return React.createElement('div', { className: 'dashboard-layout' },
+        React.createElement(Sidebar, { currentPage, onNavigate: setCurrentPage, onDemo: runDemo }),
+        React.createElement('div', { className: 'main-content' }, renderContent())
+    );
+}
+
+function LandingPage({ onStartDemo, onNavigate }) {
+    return React.createElement('div', { className: 'landing' },
+        React.createElement('nav', { className: 'landing-nav' },
+            React.createElement('div', { className: 'landing-logo' }, '🛡️ VoiceGuard'),
+            React.createElement('button', {
+                className: 'btn btn-secondary',
+                onClick: () => onNavigate('dashboard')
+            }, 'Open Dashboard')
+        ),
+        React.createElement('div', { className: 'landing-hero' },
+            React.createElement('h1', { className: 'hero-title' }, "Don't Trust the Voice. Trust the Evidence."),
+            React.createElement('p', { className: 'hero-subtitle' },
+                "VoiceGuard uses AI-powered voice and behavioral analysis to detect suspicious and potentially cloned voices before they become scams."
+            ),
+            React.createElement('div', { className: 'hero-buttons' },
+                React.createElement('button', {
+                    className: 'btn btn-primary',
+                    onClick: () => onStartDemo('sih')
+                }, '🎬 Start SIH Demo'),
+                React.createElement('button', {
+                    className: 'btn btn-secondary',
+                    onClick: () => onNavigate('dashboard')
+                }, '📊 View Dashboard')
+            ),
+            React.createElement('div', { className: 'flow-visual' },
+                React.createElement('div', { className: 'flow-steps' },
+                    React.createElement('div', { className: 'flow-step' },
+                        React.createElement('div', { className: 'flow-icon' }, '📞'),
+                        React.createElement('div', { className: 'flow-label' }, 'CALL')
+                    ),
+                    React.createElement('div', { className: 'flow-arrow' }, '→'),
+                    React.createElement('div', { className: 'flow-step' },
+                        React.createElement('div', { className: 'flow-icon' }, '🎙️'),
+                        React.createElement('div', { className: 'flow-label' }, 'VOICE ANALYSIS')
+                    ),
+                    React.createElement('div', { className: 'flow-arrow' }, '→'),
+                    React.createElement('div', { className: 'flow-step' },
+                        React.createElement('div', { className: 'flow-icon' }, '🧠'),
+                        React.createElement('div', { className: 'flow-label' }, 'AI DETECTION')
+                    ),
+                    React.createElement('div', { className: 'flow-arrow' }, '→'),
+                    React.createElement('div', { className: 'flow-step' },
+                        React.createElement('div', { className: 'flow-icon' }, '🎯'),
+                        React.createElement('div', { className: 'flow-label' }, 'RISK SCORE')
+                    ),
+                    React.createElement('div', { className: 'flow-arrow' }, '→'),
+                    React.createElement('div', { className: 'flow-step' },
+                        React.createElement('div', { className: 'flow-icon' }, '🛡️'),
+                        React.createElement('div', { className: 'flow-label' }, 'PROTECT')
+                    )
+                )
+            )
+        ),
+        React.createElement('section', { className: 'features-section' },
+            React.createElement('h2', { className: 'section-title' }, 'How VoiceGuard Works'),
+            React.createElement('div', { className: 'features-grid' },
+                React.createElement('div', { className: 'feature-card' },
+                    React.createElement('div', { className: 'feature-icon' }, '🎭'),
+                    React.createElement('h3', { className: 'feature-title' }, 'AI Voice Detection'),
+                    React.createElement('p', { className: 'feature-description' },
+                        'Detects synthetic voice markers and cloning artifacts using advanced acoustic analysis'
+                    )
+                ),
+                React.createElement('div', { className: 'feature-card' },
+                    React.createElement('div', { className: 'feature-icon' }, '🔍'),
+                    React.createElement('h3', { className: 'feature-title' }, 'Behavior Analysis'),
+                    React.createElement('p', { className: 'feature-description' },
+                        'Analyzes conversation patterns, urgency tactics, and social engineering attempts'
+                    )
+                ),
+                React.createElement('div', { className: 'feature-card' },
+                    React.createElement('div', { className: 'feature-icon' }, '⚡'),
+                    React.createElement('h3', { className: 'feature-title' }, 'Real-time Protection'),
+                    React.createElement('p', { className: 'feature-description' },
+                        'Instant risk scoring and alerts during live calls before damage occurs'
+                    )
+                ),
+                React.createElement('div', { className: 'feature-card' },
+                    React.createElement('div', { className: 'feature-icon' }, '📊'),
+                    React.createElement('h3', { className: 'feature-title' }, 'Explainable AI'),
+                    React.createElement('p', { className: 'feature-description' },
+                        'Clear breakdown of why a call is suspicious with detailed reasoning'
+                    )
+                ),
+                React.createElement('div', { className: 'feature-card' },
+                    React.createElement('div', { className: 'feature-icon' }, '🔒'),
+                    React.createElement('h3', { className: 'feature-title' }, 'Privacy First'),
+                    React.createElement('p', { className: 'feature-description' },
+                        'On-device processing, encrypted storage, and user-controlled data retention'
+                    )
+                ),
+                React.createElement('div', { className: 'feature-card' },
+                    React.createElement('div', { className: 'feature-icon' }, '📝'),
+                    React.createElement('h3', { className: 'feature-title' }, 'Threat Reporting'),
+                    React.createElement('p', { className: 'feature-description' },
+                        'One-tap reporting to authorities with complete evidence and analysis'
+                    )
+                )
+            )
+        )
+    );
+}
+
+function Sidebar({ currentPage, onNavigate, onDemo }) {
+    return React.createElement('div', { className: 'sidebar' },
+        React.createElement('div', { className: 'logo' },
+            React.createElement('div', { className: 'logo-icon' }, '🛡️'),
+            React.createElement('div', { className: 'logo-text' }, 'VoiceGuard')
+        ),
+        React.createElement('div', { className: 'nav-section' },
+            React.createElement('div', { className: 'nav-section-title' }, '🎮 Demo Controls'),
+            React.createElement('button', {
+                className: `nav-btn ${currentPage === 'dashboard' ? 'active' : ''}`,
+                onClick: () => onNavigate('dashboard')
+            }, React.createElement('span', null, '🏠'), React.createElement('span', null, 'Dashboard')),
+            React.createElement('button', {
+                className: `nav-btn ${currentPage === 'safe-demo' ? 'active' : ''}`,
+                onClick: () => onDemo('safe')
+            }, React.createElement('span', null, '✅'), React.createElement('span', null, 'Safe Call Demo')),
+            React.createElement('button', {
+                className: `nav-btn ${currentPage === 'fake-demo' ? 'active' : ''}`,
+                onClick: () => onDemo('fake')
+            }, React.createElement('span', null, '⚠️'), React.createElement('button', {
+                className: `nav-btn ${currentPage === 'report' ? 'active' : ''}`,
+                onClick: () => onNavigate('report')
+            }, React.createElement('span', null, '📄'), React.createElement('span', null, 'Report Screen'))
+        ),
+        React.createElement('div', { className: 'nav-section' },
+            React.createElement('div', { className: 'nav-section-title' }, '📱 Main Navigation'),
+            React.createElement('button', {
+                className: `nav-btn ${currentPage === 'dashboard' ? 'active' : ''}`,
+                onClick: () => onNavigate('dashboard')
+            }, React.createElement('span', null, '🏠'), React.createElement('span', null, 'Home')),
+            React.createElement('button', {
+                className: `nav-btn ${currentPage === 'statistics' ? 'active' : ''}`,
+                onClick: () => onNavigate('statistics')
+            }, React.createElement('span', null, '📊'), React.createElement('span', null, 'Statistics')),
+            React.createElement('button', {
+                className: `nav-btn ${currentPage === 'contacts' ? 'active' : ''}`,
+                onClick: () => onNavigate('contacts')
+            }, React.createElement('span', null, '👥'), React.createElement('span', null, 'Contacts')),
+            React.createElement('button', {
+                className: `nav-btn ${currentPage === 'call-history' ? 'active' : ''}`,
+                onClick: () => onNavigate('call-history')
+            }, React.createElement('span', null, '📞'), React.createElement('span', null, 'Call History')),
+            React.createElement('button', {
+                className: `nav-btn ${currentPage === 'settings' ? 'active' : ''}`,
+                onClick: () => onNavigate('settings')
+            }, React.createElement('span', null, '⚙️'), React.createElement('span', null, 'Settings'))
+        )
+    );
+}
+
+function Dashboard({ onDemo }) {
+    return React.createElement('div', null,
+        React.createElement('div', { className: 'page-header' },
+            React.createElement('h1', { className: 'page-title' }, 'VoiceGuard Dashboard'),
+            React.createElement('p', { className: 'page-subtitle' }, 'AI-powered protection for every call')
+        ),
+        React.createElement('div', { className: 'status-card' },
+            React.createElement('div', { className: 'status-icon' }, '🛡️'),
+            React.createElement('div', { className: 'status-title' }, 'PROTECTION ACTIVE'),
+            React.createElement('div', null, 'Real-time voice authentication system ready')
+        ),
+        React.createElement('div', { className: 'stats-grid' },
+            React.createElement('div', { className: 'stat-card' },
+                React.createElement('div', { className: 'stat-icon' }, '📞'),
+                React.createElement('div', { className: 'stat-number' }, mockDatabase.statistics.totalCalls),
+                React.createElement('div', { className: 'stat-label' }, 'Calls Analyzed')
+            ),
+            React.createElement('div', { className: 'stat-card' },
+                React.createElement('div', { className: 'stat-icon' }, '✅'),
+                React.createElement('div', { className: 'stat-number' }, mockDatabase.statistics.safeCalls),
+                React.createElement('div', { className: 'stat-label' }, 'Safe Calls')
+            ),
+            React.createElement('div', { className: 'stat-card' },
+                React.createElement('div', { className: 'stat-icon' }, '⚠️'),
+                React.createElement('div', { className: 'stat-number' }, mockDatabase.statistics.suspiciousCalls),
+                React.createElement('div', { className: 'stat-label' }, 'Suspicious Calls')
+            ),
+            React.createElement('div', { className: 'stat-card' },
+                React.createElement('div', { className: 'stat-icon' }, '🚫'),
+                React.createElement('div', { className: 'stat-number' }, mockDatabase.statistics.blockedCalls),
+                React.createElement('div', { className: 'stat-label' }, 'Blocked Calls')
+            )
+        ),
+        React.createElement('div', { className: 'page-header', style: { border: 'none', paddingTop: '2rem' } },
+            React.createElement('h2', { className: 'page-title', style: { fontSize: '1.5rem' } }, 'Recent Calls')
+        ),
+        React.createElement('table', { className: 'data-table' },
+            React.createElement('thead', null,
+                React.createElement('tr', null,
+                    React.createElement('th', null, 'Caller'),
+                    React.createElement('th', null, 'Phone'),
+                    React.createElement('th', null, 'Date'),
+                    React.createElement('th', null, 'Risk'),
+                    React.createElement('th', null, 'Status')
+                )
+            ),
+            React.createElement('tbody', null,
+                mockDatabase.calls.slice(0, 4).map(call =>
+                    React.createElement('tr', { key: call.id },
+                        React.createElement('td', null, call.caller),
+                        React.createElement('td', null, call.phone),
+                        React.createElement('td', null, call.date),
+                        React.createElement('td', null, call.riskScore + '%'),
+                        React.createElement('td', null,
+                            React.createElement('span', {
+                                className: `risk-badge ${call.riskLevel}`
+                            }, call.riskLevel === 'safe' ? 'Safe' : call.riskLevel === 'critical' ? 'Critical' : 'High')
+                        )
+                    )
+                )
+            )
+        )
+    );
+}
+
+function SafeCallDemo({ demoState, isAnalyzing, analysisComplete }) {
+    if (!demoState) return null;
+
+    return React.createElement('div', { className: 'demo-screen' },
+        React.createElement('div', { className: 'page-header' },
+            React.createElement('h1', { className: 'page-title' }, 'Safe Call Demo'),
+            React.createElement('p', { className: 'page-subtitle' }, 'Demonstration of verified genuine call')
+        ),
+        React.createElement('div', { className: 'call-incoming' },
+            React.createElement('div', { className: 'caller-info' },
+                React.createElement('div', { className: 'caller-icon' }, demoState.icon),
+                React.createElement('div', { className: 'caller-name' }, demoState.caller),
+                React.createElement('div', { className: 'caller-number' }, demoState.phone)
+            ),
+            isAnalyzing && React.createElement('div', { className: 'analyzing' },
+                React.createElement('div', { className: 'analyzing-text' }, 'Analyzing voice...'),
+                React.createElement('div', { className: 'progress-bar' },
+                    React.createElement('div', { className: 'progress-fill' })
+                )
+            ),
+            analysisComplete && React.createElement('div', { className: 'analysis-result safe' },
+                React.createElement('div', { className: 'result-header' },
+                    React.createElement('div', { className: 'result-icon' }, '✅'),
+                    React.createElement('div', { className: 'result-title' }, 'VOICE VERIFIED')
+                ),
+                React.createElement('div', { className: 'risk-score' }, 'Risk: 3/100'),
+                React.createElement('div', { className: 'features-detected' },
+                    React.createElement('div', { className: 'threats-title' }, 'Analysis:'),
+                    React.createElement('div', { className: 'feature-item' }, '✓ Natural speech patterns detected'),
+                    React.createElement('div', { className: 'feature-item' }, '✓ Acoustic profile matches known contact'),
+                    React.createElement('div', { className: 'feature-item' }, '✓ No suspicious requests detected'),
+                    React.createElement('div', { className: 'feature-item' }, '✓ No urgency manipulation'),
+                    React.createElement('div', { className: 'feature-item' }, '✓ No financial-risk indicators')
+                ),
+                React.createElement('div', { className: 'action-buttons' },
+                    React.createElement('button', { className: 'btn btn-success btn-large' }, '📞 Accept Call'),
+                    React.createElement('button', { className: 'btn btn-outline btn-large' }, '✖️ End Call')
+                )
+            )
+        )
+    );
+}
+
+function FakeCallDemo({ demoState, isAnalyzing, analysisComplete }) {
+    if (!demoState) return null;
+
+    return React.createElement('div', { className: 'demo-screen' },
+        React.createElement('div', { className: 'page-header' },
+            React.createElement('h1', { className: 'page-title' }, 'Suspicious Call Detection'),
+            React.createElement('p', { className: 'page-subtitle' }, 'AI-powered threat analysis in action')
+        ),
+        React.createElement('div', { className: 'call-incoming' },
+            React.createElement('div', { className: 'caller-info' },
+                React.createElement('div', { className: 'caller-icon' }, demoState.icon),
+                React.createElement('div', { className: 'caller-name' }, demoState.caller),
+                React.createElement('div', { className: 'caller-number' }, demoState.phone),
+                React.createElement('div', { style: { marginTop: '0.5rem', color: 'var(--warning)', fontWeight: '600' } }, 'VoIP Call')
+            ),
+            isAnalyzing && React.createElement('div', { className: 'analyzing' },
+                React.createElement('div', { className: 'analyzing-text' }, 'Analyzing incoming call...'),
+                React.createElement('div', { className: 'progress-bar' },
+                    React.createElement('div', { className: 'progress-fill' })
+                )
+            ),
+            analysisComplete && React.createElement(React.Fragment, null,
+                React.createElement('div', { className: 'analysis-result critical' },
+                    React.createElement('div', { className: 'result-header' },
+                        React.createElement('div', { className: 'result-icon' }, '🚨'),
+                        React.createElement('div', { className: 'result-title' }, 'CRITICAL THREAT DETECTED')
+                    ),
+                    React.createElement('div', { className: 'risk-score' }, 'Risk Score: 94/100'),
+                    React.createElement('div', { className: 'threats-list' },
+                        React.createElement('div', { className: 'threats-title' }, 'Threats Detected:'),
+                        React.createElement('div', { className: 'threat-item' }, '🎭 AI Voice Cloning Detected'),
+                        React.createElement('div', { className: 'threat-item' }, '💰 Financial Fraud Attempt'),
+                        React.createElement('div', { className: 'threat-item' }, '🔐 OTP/Credential Request'),
+                        React.createElement('div', { className: 'threat-item' }, '⚠️ Social Engineering Tactics'),
+                        React.createElement('div', { className: 'threat-item' }, '📞 Caller Identity Spoofing')
+                    ),
+                    React.createElement('div', { className: 'action-buttons' },
+                        React.createElement('button', { className: 'btn btn-danger btn-large' }, '🚫 Block Caller'),
+                        React.createElement('button', { className: 'btn btn-outline btn-large' }, '📝 Report Threat')
+                    )
+                ),
+                React.createElement('div', { className: 'explainability-section' },
+                    React.createElement('h3', { className: 'explainability-title' }, 'Why Was This Call Flagged?'),
+                    React.createElement('div', { className: 'risk-breakdown' },
+                        React.createElement('div', { className: 'risk-factor' },
+                            React.createElement('div', { className: 'factor-header' },
+                                React.createElement('span', { className: 'factor-name' }, 'AI Voice Indicators'),
+                                React.createElement('span', { className: 'factor-value' }, '35%')
+                            ),
+                            React.createElement('div', { className: 'factor-bar' },
+                                React.createElement('div', { className: 'factor-fill', style: { width: '35%' } })
+                            )
+                        ),
+                        React.createElement('div', { className: 'risk-factor' },
+                            React.createElement('div', { className: 'factor-header' },
+                                React.createElement('span', { className: 'factor-name' }, 'Conversation Behavior'),
+                                React.createElement('span', { className: 'factor-value' }, '25%')
+                            ),
+                            React.createElement('div', { className: 'factor-bar' },
+                                React.createElement('div', { className: 'factor-fill', style: { width: '25%' } })
+                            )
+                        ),
+                        React.createElement('div', { className: 'risk-factor' },
+                            React.createElement('div', { className: 'factor-header' },
+                                React.createElement('span', { className: 'factor-name' }, 'Financial Request'),
+                                React.createElement('span', { className: 'factor-value' }, '20%')
+                            ),
+                            React.createElement('div', { className: 'factor-bar' },
+                                React.createElement('div', { className: 'factor-fill', style: { width: '20%' } })
+                            )
+                        ),
+                        React.createElement('div', { className: 'risk-factor' },
+                            React.createElement('div', { className: 'factor-header' },
+                                React.createElement('span', { className: 'factor-name' }, 'Caller Reputation'),
+                                React.createElement('span', { className: 'factor-value' }, '12%')
+                            ),
+                            React.createElement('div', { className: 'factor-bar' },
+                                React.createElement('div', { className: 'factor-fill', style: { width: '12%' } })
+                            )
+                        ),
+                        React.createElement('div', { className: 'risk-factor' },
+                            React.createElement('div', { className: 'factor-header' },
+                                React.createElement('span', { className: 'factor-name' }, 'Call Metadata'),
+                                React.createElement('span', { className: 'factor-value' }, '8%')
+                            ),
+                            React.createElement('div', { className: 'factor-bar' },
+                                React.createElement('div', { className: 'factor-fill', style: { width: '8%' } })
+                            )
+                        )
+                    ),
+                    React.createElement('div', { className: 'reasons-list' },
+                        React.createElement('div', { className: 'reason-item critical' },
+                            React.createElement('span', { className: 'reason-icon' }, '🔴'),
+                            React.createElement('span', { className: 'reason-text' }, 'Synthetic voice characteristics detected - unnatural prosody and spectral irregularities')
+                        ),
+                        React.createElement('div', { className: 'reason-item critical' },
+                            React.createElement('span', { className: 'reason-icon' }, '🔴'),
+                            React.createElement('span', { className: 'reason-text' }, 'Caller requested OTP/password - credential theft attempt')
+                        ),
+                        React.createElement('div', { className: 'reason-item critical' },
+                            React.createElement('span', { className: 'reason-icon' }, '🔴'),
+                            React.createElement('span', { className: 'reason-text' }, 'Urgency manipulation detected - "within 2 minutes or account blocked"')
+                        ),
+                        React.createElement('div', { className: 'reason-item warning' },
+                            React.createElement('span', { className: 'reason-icon' }, '🟠'),
+                            React.createElement('span', { className: 'reason-text' }, 'Caller identity could not be verified - no matching trusted contact')
+                        ),
+                        React.createElement('div', { className: 'reason-item warning' },
+                            React.createElement('span', { className: 'reason-icon' }, '🟠'),
+                            React.createElement('span', { className: 'reason-text' }, 'VoIP number from suspicious location - known for spoofing attacks')
+                        )
+                    )
+                )
+            )
+        )
+    );
+}
+
+function ReportScreen({ reportSubmitted, onSubmit }) {
+    const [formData, setFormData] = useState({
+        caller: 'Unknown Caller',
+        phone: '+1 555 0123',
+        description: 'Claimed to be bank manager, asked for OTP to verify suspicious transaction.',
+        voiceCloning: true,
+        financialFraud: true,
+        otpTheft: true,
+        phishing: false,
+        govtImpersonation: false
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSubmit();
+    };
+
+    return React.createElement('div', null,
+        React.createElement('div', { className: 'page-header' },
+            React.createElement('h1', { className: 'page-title' }, 'Report Suspicious Call'),
+            React.createElement('p', { className: 'page-subtitle' }, 'Submit threat report to authorities')
+        ),
+        reportSubmitted ? React.createElement('div', null,
+            React.createElement('div', { className: 'success-message' },
+                React.createElement('span', { style: { fontSize: '1.5rem' } }, '✓'),
+                React.createElement('span', null, 'Report submitted successfully')
+            ),
+            React.createElement('div', { className: 'explainability-section' },
+                React.createElement('h3', { className: 'explainability-title' }, 'Report Details'),
+                React.createElement('div', { className: 'reason-item' },
+                    React.createElement('span', { className: 'reason-icon' }, '🆔'),
+                    React.createElement('span', { className: 'reason-text' }, React.createElement('strong', null, 'Report ID:'), ' VG-20260904-48291')
+                ),
+                React.createElement('div', { className: 'reason-item' },
+                    React.createElement('span', { className: 'reason-icon' }, '🎯'),
+                    React.createElement('span', { className: 'reason-text' }, React.createElement('strong', null, 'Risk Score:'), ' 94/100')
+                ),
+                React.createElement('div', { className: 'reason-item' },
+                    React.createElement('span', { className: 'reason-icon' }, '⚠️'),
+                    React.createElement('span', { className: 'reason-text' }, React.createElement('strong', null, 'Threats:'), ' Voice Cloning, Financial Fraud, OTP Theft')
+                ),
+                React.createElement('div', { className: 'reason-item' },
+                    React.createElement('span', { className: 'reason-icon' }, '📅'),
+                    React.createElement('span', { className: 'reason-text' }, React.createElement('strong', null, 'Timestamp:'), ' ', new Date().toLocaleString())
+                ),
+                React.createElement('div', { className: 'reason-item' },
+                    React.createElement('span', { className: 'reason-icon' }, '✅'),
+                    React.createElement('span', { className: 'reason-text' }, React.createElement('strong', null, 'Evidence:'), ' Audio recording attached and analyzed')
+                )
+            )
+        ) : React.createElement('form', { onSubmit: handleSubmit },
+            React.createElement('div', { className: 'explainability-section' },
+                React.createElement('div', { className: 'form-group' },
+                    React.createElement('label', { className: 'form-label' }, 'Caller Name'),
+                    React.createElement('input', {
+                        type: 'text',
+                        className: 'form-input',
+                        value: formData.caller,
+                        onChange: (e) => setFormData({ ...formData, caller: e.target.value })
+                    })
+                ),
+                React.createElement('div', { className: 'form-group' },
+                    React.createElement('label', { className: 'form-label' }, 'Phone Number'),
+                    React.createElement('input', {
+                        type: 'text',
+                        className: 'form-input',
+                        value: formData.phone,
+                        onChange: (e) => setFormData({ ...formData, phone: e.target.value })
+                    })
+                ),
+                React.createElement('div', { className: 'form-group' },
+                    React.createElement('label', { className: 'form-label' }, 'Threat Type'),
+                    React.createElement('div', { className: 'checkbox-group' },
+                        React.createElement('label', { className: 'checkbox-label' },
+                            React.createElement('input', {
+                                type: 'checkbox',
+                                checked: formData.voiceCloning,
+                                onChange: (e) => setFormData({ ...formData, voiceCloning: e.target.checked })
+                            }),
+                            '🎭 Voice Cloning'
+                        ),
+                        React.createElement('label', { className: 'checkbox-label' },
+                            React.createElement('input', {
+                                type: 'checkbox',
+                                checked: formData.financialFraud,
+                                onChange: (e) => setFormData({ ...formData, financialFraud: e.target.checked })
+                            }),
+                            '💰 Financial Fraud'
+                        ),
+                        React.createElement('label', { className: 'checkbox-label' },
+                            React.createElement('input', {
+                                type: 'checkbox',
+                                checked: formData.otpTheft,
+                                onChange: (e) => setFormData({ ...formData, otpTheft: e.target.checked })
+                            }),
+                            '🔐 OTP Theft'
+                        ),
+                        React.createElement('label', { className: 'checkbox-label' },
+                            React.createElement('input', {
+                                type: 'checkbox',
+                                checked: formData.phishing,
+                                onChange: (e) => setFormData({ ...formData, phishing: e.target.checked })
+                            }),
+                            '🎣 Phishing'
+                        ),
+                        React.createElement('label', { className: 'checkbox-label' },
+                            React.createElement('input', {
+                                type: 'checkbox',
+                                checked: formData.govtImpersonation,
+                                onChange: (e) => setFormData({ ...formData, govtImpersonation: e.target.checked })
+                            }),
+                            '🏛️ Government Impersonation'
+                        )
+                    )
+                ),
+                React.createElement('div', { className: 'form-group' },
+                    React.createElement('label', { className: 'form-label' }, 'Description'),
+                    React.createElement('textarea', {
+                        className: 'form-textarea',
+                        value: formData.description,
+                        onChange: (e) => setFormData({ ...formData, description: e.target.value })
+                    })
+                ),
+                React.createElement('button', { type: 'submit', className: 'btn btn-primary btn-large' }, '📤 Submit Report')
+            )
+        )
+    );
+}
+
+function Statistics() {
+    return React.createElement('div', null,
+        React.createElement('div', { className: 'page-header' },
+            React.createElement('h1', { className: 'page-title' }, 'Statistics'),
+            React.createElement('p', { className: 'page-subtitle' }, 'Voice security analytics and trends')
+        ),
+        React.createElement('div', { className: 'stats-grid' },
+            React.createElement('div', { className: 'stat-card' },
+                React.createElement('div', { className: 'stat-icon' }, '📞'),
+                React.createElement('div', { className: 'stat-number' }, mockDatabase.statistics.totalCalls),
+                React.createElement('div', { className: 'stat-label' }, 'Total Calls Analyzed')
+            ),
+            React.createElement('div', { className: 'stat-card' },
+                React.createElement('div', { className: 'stat-icon' }, '✅'),
+                React.createElement('div', { className: 'stat-number' }, mockDatabase.statistics.safeCalls),
+                React.createElement('div', { className: 'stat-label' }, 'Safe Calls')
+            ),
+            React.createElement('div', { className: 'stat-card' },
+                React.createElement('div', { className: 'stat-icon' }, '⚠️'),
+                React.createElement('div', { className: 'stat-number' }, mockDatabase.statistics.suspiciousCalls),
+                React.createElement('div', { className: 'stat-label' }, 'Suspicious Calls')
+            ),
+            React.createElement('div', { className: 'stat-card' },
+                React.createElement('div', { className: 'stat-icon' }, '🚫'),
+                React.createElement('div', { className: 'stat-number' }, mockDatabase.statistics.blockedCalls),
+                React.createElement('div', { className: 'stat-label' }, 'Blocked Calls')
+            ),
+            React.createElement('div', { className: 'stat-card' },
+                React.createElement('div', { className: 'stat-icon' }, '🎯'),
+                React.createElement('div', { className: 'stat-number' }, mockDatabase.statistics.avgRiskScore),
+                React.createElement('div', { className: 'stat-label' }, 'Avg Risk Score')
+            ),
+            React.createElement('div', { className: 'stat-card' },
+                React.createElement('div', { className: 'stat-icon' }, '🚨'),
+                React.createElement('div', { className: 'stat-number' }, mockDatabase.statistics.threatsDetected),
+                React.createElement('div', { className: 'stat-label' }, 'Threats Detected')
+            )
+        ),
+        React.createElement('div', { className: 'explainability-section' },
+            React.createElement('h3', { className: 'explainability-title' }, 'Threat Distribution'),
+            React.createElement('div', { className: 'risk-factor' },
+                React.createElement('div', { className: 'factor-header' },
+                    React.createElement('span', { className: 'factor-name' }, '🎭 Voice Cloning'),
+                    React.createElement('span', { className: 'factor-value' }, '2')
+                ),
+                React.createElement('div', { className: 'factor-bar' },
+                    React.createElement('div', { className: 'factor-fill', style: { width: '33%' } })
+                )
+            ),
+            React.createElement('div', { className: 'risk-factor' },
+                React.createElement('div', { className: 'factor-header' },
+                    React.createElement('span', { className: 'factor-name' }, '💰 Financial Fraud'),
+                    React.createElement('span', { className: 'factor-value' }, '2')
+                ),
+                React.createElement('div', { className: 'factor-bar' },
+                    React.createElement('div', { className: 'factor-fill', style: { width: '33%' } })
+                )
+            ),
+            React.createElement('div', { className: 'risk-factor' },
+                React.createElement('div', { className: 'factor-header' },
+                    React.createElement('span', { className: 'factor-name' }, '🎣 Phishing'),
+                    React.createElement('span', { className: 'factor-value' }, '1')
+                ),
+                React.createElement('div', { className: 'factor-bar' },
+                    React.createElement('div', { className: 'factor-fill', style: { width: '17%' } })
+                )
+            ),
+            React.createElement('div', { className: 'risk-factor' },
+                React.createElement('div', { className: 'factor-header' },
+                    React.createElement('span', { className: 'factor-name' }, '🏛️ Government Impersonation'),
+                    React.createElement('span', { className: 'factor-value' }, '1')
+                ),
+                React.createElement('div', { className: 'factor-bar' },
+                    React.createElement('div', { className: 'factor-fill', style: { width: '17%' } })
+                )
+            )
+        )
+    );
+}
+
+function Contacts() {
+    return React.createElement('div', null,
+        React.createElement('div', { className: 'page-header' },
+            React.createElement('h1', { className: 'page-title' }, 'Trusted Contacts'),
+            React.createElement('p', { className: 'page-subtitle' }, 'Manage your verified contacts and voice profiles')
+        ),
+        React.createElement('div', { className: 'contacts-grid' },
+            mockDatabase.contacts.map(contact =>
+                React.createElement('div', { key: contact.id, className: 'contact-card' },
+                    React.createElement('div', { className: 'contact-icon' }, contact.icon),
+                    React.createElement('div', { className: 'contact-name' }, contact.name),
+                    React.createElement('div', { className: 'contact-phone' }, contact.phone),
+                    React.createElement('div', { className: 'contact-phone', style: { marginBottom: '0.5rem' } }, contact.relationship),
+                    contact.trusted && React.createElement('span', { className: 'contact-badge' }, '✓ Trusted')
+                )
+            )
+        )
+    );
+}
+
+function CallHistory() {
+    return React.createElement('div', null,
+        React.createElement('div', { className: 'page-header' },
+            React.createElement('h1', { className: 'page-title' }, 'Call History'),
+            React.createElement('p', { className: 'page-subtitle' }, 'Complete record of analyzed calls')
+        ),
+        React.createElement('table', { className: 'data-table' },
+            React.createElement('thead', null,
+                React.createElement('tr', null,
+                    React.createElement('th', null, 'Caller'),
+                    React.createElement('th', null, 'Phone'),
+                    React.createElement('th', null, 'Date'),
+                    React.createElement('th', null, 'Duration'),
+                    React.createElement('th', null, 'Risk'),
+                    React.createElement('th', null, 'Status'),
+                    React.createElement('th', null, 'Threat')
+                )
+            ),
+            React.createElement('tbody', null,
+                mockDatabase.calls.map(call =>
+                    React.createElement('tr', { key: call.id },
+                        React.createElement('td', null, call.caller),
+                        React.createElement('td', null, call.phone),
+                        React.createElement('td', null, call.date),
+                        React.createElement('td', null, call.duration),
+                        React.createElement('td', null, call.riskScore + '%'),
+                        React.createElement('td', null,
+                            React.createElement('span', {
+                                className: `risk-badge ${call.riskLevel}`
+                            }, call.riskLevel === 'safe' ? 'Safe' : call.riskLevel === 'critical' ? 'Critical' : 'High')
+                        ),
+                        React.createElement('td', null, call.threat)
+                    )
+                )
+            )
+        )
+    );
+}
+
+function Settings() {
+    const [settings, setSettings] = useState({
+        aiDetection: true,
+        realtimeProtection: true,
+        autoRecording: false,
+        threatNotifications: true,
+        trustedContactAlerts: true,
+        highRiskBlocking: false
+    });
+
+    return React.createElement('div', null,
+        React.createElement('div', { className: 'page-header' },
+            React.createElement('h1', { className: 'page-title' }, 'Settings'),
+            React.createElement('p', { className: 'page-subtitle' }, 'Configure VoiceGuard protection')
+        ),
+        React.createElement('div', { className: 'explainability-section' },
+            React.createElement('h3', { className: 'explainability-title' }, 'Protection Settings'),
+            React.createElement('div', { className: 'checkbox-group' },
+                React.createElement('label', { className: 'checkbox-label' },
+                    React.createElement('input', {
+                        type: 'checkbox',
+                        checked: settings.aiDetection,
+                        onChange: (e) => setSettings({ ...settings, aiDetection: e.target.checked })
+                    }),
+                    '🤖 AI Voice Detection'
+                ),
+                React.createElement('label', { className: 'checkbox-label' },
+                    React.createElement('input', {
+                        type: 'checkbox',
+                        checked: settings.realtimeProtection,
+                        onChange: (e) => setSettings({ ...settings, realtimeProtection: e.target.checked })
+                    }),
+                    '⚡ Real-time Protection'
+                ),
+                React.createElement('label', { className: 'checkbox-label' },
+                    React.createElement('input', {
+                        type: 'checkbox',
+                        checked: settings.autoRecording,
+                        onChange: (e) => setSettings({ ...settings, autoRecording: e.target.checked })
+                    }),
+                    '🎙️ Automatic Call Recording'
+                ),
+                React.createElement('label', { className: 'checkbox-label' },
+                    React.createElement('input', {
+                        type: 'checkbox',
+                        checked: settings.threatNotifications,
+                        onChange: (e) => setSettings({ ...settings, threatNotifications: e.target.checked })
+                    }),
+                    '🔔 Threat Notifications'
+                ),
+                React.createElement('label', { className: 'checkbox-label' },
+                    React.createElement('input', {
+                        type: 'checkbox',
+                        checked: settings.trustedContactAlerts,
+                        onChange: (e) => setSettings({ ...settings, trustedContactAlerts: e.target.checked })
+                    }),
+                    '👥 Trusted Contact Alerts'
+                ),
+                React.createElement('label', { className: 'checkbox-label' },
+                    React.createElement('input', {
+                        type: 'checkbox',
+                        checked: settings.highRiskBlocking,
+                        onChange: (e) => setSettings({ ...settings, highRiskBlocking: e.target.checked })
+                    }),
+                    '🚫 Automatic High-Risk Call Blocking'
+                )
+            )
+        ),
+        React.createElement('div', { className: 'explainability-section' },
+            React.createElement('h3', { className: 'explainability-title' }, 'Privacy & Security'),
+            React.createElement('div', { className: 'reason-item' },
+                React.createElement('span', { className: 'reason-icon' }, '✓'),
+                React.createElement('span', { className: 'reason-text' }, 'Encryption in transit and at rest')
+            ),
+            React.createElement('div', { className: 'reason-item' },
+                React.createElement('span', { className: 'reason-icon' }, '✓'),
+                React.createElement('span', { className: 'reason-text' }, 'On-device processing where possible')
+            ),
+            React.createElement('div', { className: 'reason-item' },
+                React.createElement('span', { className: 'reason-icon' }, '✓'),
+                React.createElement('span', { className: 'reason-text' }, 'User-controlled data retention')
+            ),
+            React.createElement('div', { className: 'reason-item' },
+                React.createElement('span', { className: 'reason-icon' }, '✓'),
+                React.createElement('span', { className: 'reason-text' }, 'No unnecessary data sharing')
+            )
+        )
+    );
+}
+
+const root = createRoot(document.getElementById('root'));
+root.render(React.createElement(App));
+</script>
