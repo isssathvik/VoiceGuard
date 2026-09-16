@@ -4,7 +4,9 @@ import type {
   CallRecord,
   Contact,
   IncidentReport,
-  SystemStats
+  SystemStats,
+  BlockchainLedgerEntry
+  ,VoiceComparisonResponse
 } from './types';
 import { apiService } from './services/api';
 
@@ -40,6 +42,8 @@ export const App: React.FC = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [reports, setReports] = useState<IncidentReport[]>([]);
   const [stats, setStats] = useState<SystemStats | null>(null);
+  const [blockchainLedger, setBlockchainLedger] = useState<BlockchainLedgerEntry[]>([]);
+  const [blockchainVerified, setBlockchainVerified] = useState<boolean>(true);
   const [activeAnalysis, setActiveAnalysis] = useState<CallAnalysisResponse | null>(null);
   const [prefillReportData, setPrefillReportData] = useState<CallAnalysisResponse | CallRecord | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -121,6 +125,10 @@ export const App: React.FC = () => {
           protection_status: 'ACTIVE_GUARD',
           last_threat_detected: '4 mins ago',
         });
+
+        const ledgerResponse = await apiService.getBlockchainLedger();
+        setBlockchainLedger(ledgerResponse.chain || []);
+        setBlockchainVerified(Boolean(ledgerResponse.verified));
       } catch (err) {
         console.warn('Initial data fallback loaded:', err);
       }
@@ -206,6 +214,14 @@ export const App: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleCompareVoices = async (original: File, cloned: File): Promise<VoiceComparisonResponse> => {
+    const result = await apiService.compareVoices(original, cloned);
+    const ledgerResponse = await apiService.getBlockchainLedger();
+    setBlockchainLedger(ledgerResponse.chain || []);
+    setBlockchainVerified(Boolean(ledgerResponse.verified));
+    return result;
   };
 
   // Report Submission Handler
@@ -370,6 +386,8 @@ export const App: React.FC = () => {
       {currentView === 'dashboard' && (
         <DashboardView
           stats={stats}
+          blockchainLedger={blockchainLedger}
+          blockchainVerified={blockchainVerified}
           recentCalls={calls}
           onSelectCall={(call) => setSelectedCallForDetail(call)}
           onOpenReportWithCall={(call) => {
@@ -392,6 +410,7 @@ export const App: React.FC = () => {
         <CallAnalysisView
           analysisData={activeAnalysis}
           onAnalyzeAudioFile={handleAnalyzeAudioFile}
+          onCompareVoices={handleCompareVoices}
           onSelectSample={handleSelectScenario}
           onOpenReportWithData={(data) => {
             setPrefillReportData(data);

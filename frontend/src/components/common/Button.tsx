@@ -23,23 +23,23 @@ export const Button: React.FC<ButtonProps> = ({
   const getVariantStyles = () => {
     switch (variant) {
       case 'primary':
-        return 'bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-lg shadow-indigo-600/30 border border-violet-400/30 hover:shadow-indigo-500/50';
+        return 'bg-gradient-to-r from-sky-500 to-cyan-600 hover:from-sky-400 hover:to-cyan-500 text-slate-950 shadow-lg shadow-sky-500/20 border border-sky-300/40 hover:shadow-sky-400/40';
       case 'cyber':
-        return 'bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white shadow-lg shadow-cyan-500/25 border border-cyan-400/40 hover:border-cyan-300';
+        return 'bg-gradient-to-r from-slate-700 via-sky-600 to-cyan-600 hover:from-slate-600 hover:via-sky-500 hover:to-cyan-500 text-white shadow-lg shadow-sky-500/20 border border-sky-400/30 hover:border-sky-300';
       case 'secondary':
-        return 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border border-slate-700/80 shadow-sm';
+        return 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-100 border border-slate-600/80 shadow-sm';
       case 'danger':
-        return 'bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white shadow-lg shadow-rose-600/30 border border-rose-400/30';
+        return 'bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white shadow-lg shadow-rose-600/25 border border-rose-400/30';
       case 'warning':
-        return 'bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white shadow-lg shadow-amber-600/30 border border-amber-400/30';
+        return 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 shadow-lg shadow-amber-500/25 border border-amber-300/40';
       case 'success':
-        return 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-lg shadow-emerald-600/30 border border-emerald-400/30';
+        return 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 shadow-lg shadow-emerald-500/20 border border-emerald-300/40';
       case 'outline':
-        return 'bg-transparent hover:bg-slate-800/60 text-slate-300 border border-slate-700/80 hover:border-slate-500';
+        return 'bg-transparent hover:bg-slate-800/60 text-slate-200 border border-slate-600/80 hover:border-sky-400/40';
       case 'ghost':
-        return 'bg-transparent hover:bg-slate-800/60 text-slate-400 hover:text-slate-100 border border-transparent';
+        return 'bg-transparent hover:bg-slate-800/60 text-slate-300 hover:text-slate-100 border border-transparent';
       default:
-        return 'bg-violet-600 text-white';
+        return 'bg-sky-500 text-slate-950';
     }
   };
 

@@ -35,30 +35,30 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onLaunchSafeDemo,
 }) => {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-cyan-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-sky-500/40 selection:text-white">
       {/* Background Cyber Glow & Grid Effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/3 -right-40 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 left-1/3 w-96 h-96 bg-rose-500/10 rounded-full blur-3xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b08_1px,transparent_1px),linear-gradient(to_bottom,#1e293b08_1px,transparent_1px)] bg-[size:32px_32px]" />
+        <div className="absolute -top-40 -left-40 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 -right-40 w-96 h-96 bg-slate-400/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 left-1/3 w-96 h-96 bg-cyan-500/8 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#94a3b815_1px,transparent_1px),linear-gradient(to_bottom,#94a3b815_1px,transparent_1px)] bg-[size:32px_32px]" />
       </div>
 
       {/* Navigation Bar */}
-      <header className="sticky top-0 z-50 border-b border-indigo-500/20 bg-slate-950/80 backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-slate-700/70 bg-slate-950/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 p-0.5 shadow-lg shadow-cyan-500/20">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-400 via-cyan-500 to-slate-200 p-0.5 shadow-lg shadow-sky-500/20">
               <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                <ShieldAlert className="w-5 h-5 text-cyan-400" />
+                <ShieldAlert className="w-5 h-5 text-sky-300" />
               </div>
             </div>
             <div>
               <span className="font-mono font-bold text-base tracking-wider text-white">
-                VOICE<span className="text-cyan-400">GUARD</span>
+                VOICE<span className="text-sky-300">GUARD</span>
               </span>
-              <span className="hidden sm:inline-block ml-2 text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
-                SIH 2026 ED.
+              <span className="hidden sm:inline-block ml-2 text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/10 text-sky-200 border border-sky-400/20">
+                AI DEFENSE EDITION
               </span>
             </div>
           </div>
@@ -71,7 +71,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               leftIcon={<Compass className="w-4 h-4 text-cyan-400" />}
               className="text-xs font-mono hidden md:flex"
             >
-              SIH Presentation Tour
+              Product Presentation Tour
             </Button>
             <Button
               variant="cyber"
@@ -90,16 +90,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <main className="flex-1 z-10">
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 text-center space-y-8">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-cyan-300 text-xs font-mono shadow-inner shadow-cyan-500/10">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-spin" />
-            <span>Smart India Hackathon 2026 · AI Citizen Cybersecurity Initiative</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-sky-500/10 border border-sky-400/20 text-sky-200 text-xs font-mono shadow-inner shadow-sky-500/10">
+            <Sparkles className="w-3.5 h-3.5 text-sky-300 animate-spin" />
+            <span>AI Citizen Cybersecurity Initiative</span>
           </div>
 
           {/* Heading */}
           <div className="space-y-4 max-w-4xl mx-auto">
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white font-mono leading-tight">
               Real-Time AI Defense Against{' '}
-              <span className="bg-gradient-to-r from-cyan-400 via-indigo-300 to-rose-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-sky-300 via-slate-100 to-cyan-300 bg-clip-text text-transparent">
                 Voice Clones & "Digital Arrest"
               </span>
             </h1>
@@ -143,7 +143,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Live Telemetry KPI Strip */}
           <div className="pt-10 max-w-5xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-slate-900/80 border border-indigo-500/20 backdrop-blur-md shadow-2xl font-mono text-left">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-slate-900/75 border border-slate-700/70 backdrop-blur-md shadow-2xl font-mono text-left">
               <div className="p-3 border-r border-slate-800/80">
                 <div className="text-[11px] text-slate-400 uppercase">Detection Latency</div>
                 <div className="text-xl sm:text-2xl font-bold text-cyan-400">184 ms</div>
@@ -245,12 +245,23 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </p>
               <div className="text-[10px] text-cyan-400">Target: International Robocalls</div>
             </div>
+
+            <div className="md:col-span-3 p-5 rounded-2xl bg-gradient-to-br from-sky-500/10 via-slate-900 to-slate-900 border border-sky-400/20 space-y-3 shadow-lg hover:border-sky-400/40 transition-all">
+              <div className="w-9 h-9 rounded-lg bg-sky-500/15 text-sky-300 flex items-center justify-center font-bold">
+                Chain
+              </div>
+              <h3 className="font-bold text-white text-sm">Blockchain Evidence Ledger</h3>
+              <p className="text-slate-400 font-sans text-[11px] leading-relaxed">
+                Every suspicious call, transcript hash, and incident report is cryptographically sealed into a tamper-evident blockchain ledger for legal-proof integrity and audit readiness.
+              </p>
+              <div className="text-[10px] text-sky-300">Immutable · Hash-anchored · Court-ready evidence</div>
+            </div>
           </div>
         </section>
 
         {/* 4-Stage Defense Workflow */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-slate-900">
-          <div className="bg-slate-900/80 border border-indigo-500/20 rounded-3xl p-8 backdrop-blur-md shadow-2xl space-y-8">
+          <div className="bg-slate-900/80 border border-slate-700/70 rounded-3xl p-8 backdrop-blur-md shadow-[0_18px_50px_rgba(15,23,42,0.7)] space-y-8">
             <div className="text-center space-y-2">
               <span className="text-xs font-mono font-bold text-cyan-400 uppercase">
                 AUTONOMOUS MITIGATION PIPELINE
@@ -310,7 +321,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-cyan-400" />
-            <span>VOICEGUARD · SIH 2026 Innovation Project</span>
+            <span>VOICEGUARD · AI SECURITY PLATFORM</span>
           </div>
 
           <div className="text-center sm:text-right">

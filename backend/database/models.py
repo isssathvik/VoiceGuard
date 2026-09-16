@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, Float, Text, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, Float, Text, DateTime, LargeBinary
 from datetime import datetime
 import json
 from .connection import Base
@@ -45,6 +45,21 @@ class CallRecordModel(Base):
             return json.loads(self.analysis_json) if self.analysis_json else {}
         except Exception:
             return {}
+
+
+class EvidenceRecordModel(Base):
+    __tablename__ = "evidence_records"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    call_id = Column(String(64), unique=True, nullable=False, index=True)
+    audio_filename = Column(String(255), nullable=True)
+    audio_data = Column(LargeBinary, nullable=True)
+    audio_hash = Column(String(64), nullable=True, index=True)
+    result_json = Column(Text, nullable=False)
+    result_hash = Column(String(64), nullable=False, index=True)
+    previous_hash = Column(String(64), nullable=False)
+    evidence_hash = Column(String(64), unique=True, nullable=False, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
 class ReportModel(Base):
     __tablename__ = "reports"

@@ -73,6 +73,9 @@ class CallAnalysisResponse(BaseModel):
     recommendation: str  # ACCEPT, VERIFY, WARN, BLOCK, REPORT
     transcript: Optional[str] = None
     audio_waveform: Optional[List[float]] = None
+    audio_hash: Optional[str] = None
+    result_hash: Optional[str] = None
+    evidence_hash: Optional[str] = None
 
 # ==========================================
 # REQUEST SCHEMAS

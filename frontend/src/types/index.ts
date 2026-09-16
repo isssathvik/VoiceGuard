@@ -73,6 +73,27 @@ export interface CallAnalysisResponse {
   recommendation: 'ACCEPT' | 'VERIFY' | 'WARN' | 'BLOCK' | 'BLOCK / REPORT' | string;
   transcript?: string | null;
   audio_waveform?: number[] | null;
+  audio_hash?: string | null;
+  result_hash?: string | null;
+  evidence_hash?: string | null;
+}
+
+export interface VoiceComparisonResult {
+  call_id: string;
+  filename: string;
+  synthetic_score: number;
+  genuine_score: number;
+  audio_hash: string | null;
+  result_hash: string;
+  evidence_hash: string;
+  features: Record<string, unknown>;
+}
+
+export interface VoiceComparisonResponse {
+  original: VoiceComparisonResult;
+  cloned: VoiceComparisonResult;
+  synthetic_score_difference: number;
+  interpretation: string;
 }
 
 export interface Contact {
@@ -219,6 +240,28 @@ export interface ProtectionActionResponse {
   phone_number: string;
   timestamp: string;
   status: string;
+}
+
+export interface BlockchainLedgerEntry {
+  index: number;
+  timestamp: string;
+  previous_hash: string;
+  hash: string;
+  payload: {
+    report_id?: string;
+    caller_name?: string;
+    risk_score?: number;
+    status?: string;
+    call_id?: string | null;
+    audio_hash?: string | null;
+    result_hash?: string;
+    audio_stored?: boolean;
+  };
+}
+
+export interface BlockchainLedgerResponse {
+  chain: BlockchainLedgerEntry[];
+  verified: boolean;
 }
 
 export interface SystemSettings {

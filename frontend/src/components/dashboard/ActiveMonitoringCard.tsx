@@ -106,7 +106,7 @@ export const ActiveMonitoringCard: React.FC<ActiveMonitoringCardProps> = ({
               leftIcon={<Sparkles className="w-3.5 h-3.5 text-cyan-300" />}
               className="text-xs font-mono justify-center"
             >
-              SIH Presentation Tour
+              Guided Product Tour
             </Button>
           </div>
         </div>

@@ -89,9 +89,9 @@ export const SIHDemoWorkflowModal: React.FC<SIHDemoWorkflowModalProps> = ({
           </div>
           <div>
             <h3 className="text-base font-bold text-white font-mono flex items-center gap-2">
-              Smart India Hackathon Prototype Evaluation Guide
+              VoiceGuard Product Evaluation Guide
             </h3>
-            <p className="text-xs text-cyan-400 font-medium">Interactive Judge Presentation Tour</p>
+            <p className="text-xs text-cyan-400 font-medium">Interactive Product Presentation Tour</p>
           </div>
         </div>
       }
@@ -133,7 +133,7 @@ export const SIHDemoWorkflowModal: React.FC<SIHDemoWorkflowModalProps> = ({
             <span className="px-2.5 py-0.5 text-xs font-mono font-bold bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 rounded-full">
               STEP {activeStep} OF 4 · {current.tag}
             </span>
-            <span className="text-xs font-mono text-slate-400">SIH PROBLEM STATEMENT DEF-04</span>
+            <span className="text-xs font-mono text-slate-400">THREAT SCENARIO DEF-04</span>
           </div>
 
           <div>

@@ -23,6 +23,12 @@ class VoiceAnalyzer:
         try:
             # Load audio file
             y, sr = librosa.load(audio_path, sr=16000, mono=True)
+            y, _ = librosa.effects.trim(y, top_db=35)
+            peak = np.max(np.abs(y)) if y.size else 0
+            if peak > 0:
+                y = librosa.util.normalize(y)
+            if y.size < sr * 0.5:
+                return VoiceAnalyzer._fallback_analysis(is_known_contact)
 
             # Run 5-layer detection
             spectral_score = VoiceAnalyzer._analyze_spectral(y, sr)
@@ -42,7 +48,7 @@ class VoiceAnalyzer:
             )
 
             # Convert to probabilities
-            synthetic_prob = 1.0 - real_confidence
+            synthetic_prob = float(np.clip(1.0 - real_confidence, 0.0, 1.0))
             genuine_prob = real_confidence
 
             # Determine binary flags based on scores

@@ -91,7 +91,7 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, isLoading
         <LatencyBenchmarkChart />
       </div>
 
-      {/* SIH Innovation Impact Card */}
+      {/* Innovation Impact Card */}
       <div className="bg-slate-900/90 border border-indigo-500/20 rounded-2xl p-6 backdrop-blur-md shadow-xl space-y-4">
         <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
           <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
@@ -99,7 +99,7 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, isLoading
           </div>
           <div>
             <h3 className="text-sm font-bold text-white font-mono">
-              Smart India Hackathon 2026 Strategic Value
+              VoiceGuard Strategic Value
             </h3>
             <p className="text-xs text-slate-400">National telecom & cyber defense readiness</p>
           </div>

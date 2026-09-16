@@ -16,7 +16,7 @@ import {
   Info,
   Server
 } from 'lucide-react';
-import { CallAnalysisResponse } from '../../types';
+import { CallAnalysisResponse, VoiceComparisonResponse } from '../../types';
 import { RiskScoreGauge } from './RiskScoreGauge';
 import { ExplainabilityPanel } from './ExplainabilityPanel';
 import { TranscriptHighlighter } from './TranscriptHighlighter';
@@ -28,6 +28,7 @@ import { Badge } from '../common/Badge';
 interface CallAnalysisViewProps {
   analysisData: CallAnalysisResponse | null;
   onAnalyzeAudioFile: (file: File) => Promise<void>;
+  onCompareVoices: (original: File, cloned: File) => Promise<VoiceComparisonResponse>;
   onSelectSample: (sampleName: string) => void;
   onOpenReportWithData: (data: CallAnalysisResponse) => void;
   onShowToast: (title: string, message?: string, type?: 'success' | 'warning' | 'error' | 'info') => void;
@@ -37,6 +38,7 @@ interface CallAnalysisViewProps {
 export const CallAnalysisView: React.FC<CallAnalysisViewProps> = ({
   analysisData,
   onAnalyzeAudioFile,
+  onCompareVoices,
   onSelectSample,
   onOpenReportWithData,
   onShowToast,
@@ -44,8 +46,30 @@ export const CallAnalysisView: React.FC<CallAnalysisViewProps> = ({
 }) => {
   const [showUploadBox, setShowUploadBox] = useState<boolean>(!analysisData);
   const [isPlayingWaveform, setIsPlayingWaveform] = useState<boolean>(false);
+  const [originalFile, setOriginalFile] = useState<File | null>(null);
+  const [clonedFile, setClonedFile] = useState<File | null>(null);
+  const [comparison, setComparison] = useState<VoiceComparisonResponse | null>(null);
+  const [isComparing, setIsComparing] = useState(false);
+
+  const handleCompare = async () => {
+    if (!originalFile || !clonedFile) return;
+    setIsComparing(true);
+    try {
+      setComparison(await onCompareVoices(originalFile, clonedFile));
+      onShowToast('Voice Comparison Complete', 'Both recordings were hashed and added to the evidence ledger.', 'success');
+    } catch (error) {
+      onShowToast('Comparison Failed', error instanceof Error ? error.message : 'Could not compare recordings.', 'error');
+    } finally {
+      setIsComparing(false);
+    }
+  };
 
   const data = analysisData;
+  const syntheticPercent = data
+    ? data.voice_analysis.synthetic_probability <= 1
+      ? data.voice_analysis.synthetic_probability * 100
+      : data.voice_analysis.synthetic_probability
+    : 0;
 
   const handleBlockCaller = () => {
     if (!data) return;
@@ -114,6 +138,46 @@ export const CallAnalysisView: React.FC<CallAnalysisViewProps> = ({
         />
       )}
 
+      <div className="rounded-2xl border border-cyan-500/20 bg-slate-900/80 p-5 space-y-4 shadow-xl backdrop-blur-md">
+        <div>
+          <h3 className="text-sm font-bold text-white font-mono">Original vs Cloned Voice Test</h3>
+          <p className="text-xs text-slate-400 mt-1">Upload two recordings. Each audio file and result receives its own SHA-256 evidence entry.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <label className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3 text-xs text-slate-300 font-mono cursor-pointer">
+            <span className="block text-emerald-300 font-bold mb-2">ORIGINAL / GENUINE VOICE</span>
+            <input type="file" accept="audio/*,.wav,.mp3,.m4a,.webm,.ogg" onChange={(event) => setOriginalFile(event.target.files?.[0] || null)} className="w-full text-xs" />
+            <span className="block mt-2 text-slate-500 truncate">{originalFile?.name || 'Choose original recording'}</span>
+          </label>
+          <label className="rounded-xl border border-rose-500/30 bg-rose-500/5 p-3 text-xs text-slate-300 font-mono cursor-pointer">
+            <span className="block text-rose-300 font-bold mb-2">CLONED / SYNTHETIC VOICE</span>
+            <input type="file" accept="audio/*,.wav,.mp3,.m4a,.webm,.ogg" onChange={(event) => setClonedFile(event.target.files?.[0] || null)} className="w-full text-xs" />
+            <span className="block mt-2 text-slate-500 truncate">{clonedFile?.name || 'Choose cloned recording'}</span>
+          </label>
+        </div>
+        <Button variant="cyber" size="sm" onClick={handleCompare} isLoading={isComparing} disabled={!originalFile || !clonedFile} className="text-xs font-mono">
+          Compare Voices & Write Ledger Entries
+        </Button>
+        {comparison && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono">
+            {[['ORIGINAL', comparison.original, 'text-emerald-300'], ['CLONED', comparison.cloned, 'text-rose-300']].map(([label, item, color]) => {
+              const voice = item as VoiceComparisonResponse['original'];
+              return <div key={label as string} className="rounded-xl border border-slate-700 bg-slate-950/70 p-3 space-y-1">
+                <div className={`${color as string} font-bold`}>{label as string}</div>
+                <div className="text-slate-300">Synthetic: <strong>{voice.synthetic_score}%</strong></div>
+                <div className="text-slate-300">Genuine: <strong>{voice.genuine_score}%</strong></div>
+                <div className="text-slate-500 break-all">Evidence: {voice.evidence_hash.slice(0, 18)}...</div>
+              </div>;
+            })}
+            <div className="rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-3">
+              <div className="text-cyan-300 font-bold">SCORE DIFFERENCE</div>
+              <div className="text-2xl text-white font-bold mt-1">{comparison.synthetic_score_difference}%</div>
+              <div className="text-slate-400 mt-1">Both entries are chained and verifiable.</div>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* If analysis data is present, render complete forensics dashboard */}
       {data ? (
         <div className="space-y-6">
@@ -156,10 +220,10 @@ export const CallAnalysisView: React.FC<CallAnalysisViewProps> = ({
                 AI Synthesis:{' '}
                 <strong
                   className={
-                    data.voice_analysis.synthetic_probability > 50 ? 'text-rose-400' : 'text-emerald-400'
+                    syntheticPercent > 50 ? 'text-rose-400' : 'text-emerald-400'
                   }
                 >
-                  {data.voice_analysis.synthetic_probability}%
+                  {syntheticPercent.toFixed(1)}%
                 </strong>
               </span>
 
@@ -283,7 +347,7 @@ export const CallAnalysisView: React.FC<CallAnalysisViewProps> = ({
               <AudioWaveformVisualizer
                 waveform={data.audio_waveform || undefined}
                 duration={data.duration}
-                isSynthetic={data.voice_analysis.synthetic_probability > 50}
+                isSynthetic={syntheticPercent > 50}
                 isPlaying={isPlayingWaveform}
                 onTogglePlay={() => setIsPlayingWaveform(!isPlayingWaveform)}
                 accentColor={data.risk_level === 'SAFE' ? 'emerald' : 'rose'}

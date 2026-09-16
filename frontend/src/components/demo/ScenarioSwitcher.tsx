@@ -554,7 +554,7 @@ export const ScenarioSwitcher: React.FC<ScenarioSwitcherProps> = ({
           </div>
           <div>
             <h3 className="text-base font-bold text-white font-mono">
-              SIH Evaluation Scenario Library
+              Evaluation Scenario Library
             </h3>
             <p className="text-xs text-indigo-300 font-medium">
               Select any pre-configured test vector to evaluate VoiceGuard AI

@@ -74,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
   const info = getViewTitle();
 
   return (
-    <header className="h-16 bg-slate-950/70 border-b border-indigo-500/20 px-6 flex items-center justify-between backdrop-blur-xl z-20 shrink-0">
+    <header className="h-16 bg-slate-950/75 border-b border-slate-700/70 px-6 flex items-center justify-between backdrop-blur-xl z-20 shrink-0">
       {/* View Title */}
       <div className="flex items-center gap-3">
         <div>
@@ -88,17 +88,17 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Right Controls & Quick Actions */}
       <div className="flex items-center gap-3">
         {/* Live Clock & Shield State */}
-        <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-indigo-500/20 font-mono text-xs">
-          <Activity className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+        <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-slate-700/70 font-mono text-xs">
+          <Activity className="w-3.5 h-3.5 text-sky-300 animate-pulse" />
           <span className="text-slate-400">LATENCY:</span>
-          <span className="text-emerald-400 font-semibold">18ms</span>
+          <span className="text-emerald-300 font-semibold">18ms</span>
           <span className="text-slate-600">|</span>
-          <span className="text-slate-300 font-bold">{time || '00:00:00 UTC'}</span>
+          <span className="text-slate-200 font-bold">{time || '00:00:00 UTC'}</span>
         </div>
 
         {/* Protection Mode Badge */}
-        <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-mono font-medium">
-          <Lock className="w-3 h-3 text-cyan-400" />
+        <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-500/10 border border-sky-400/20 text-sky-200 text-xs font-mono font-medium">
+          <Lock className="w-3 h-3 text-sky-300" />
           <span>REAL-TIME SHIELD</span>
         </div>
 
@@ -124,7 +124,7 @@ export const Header: React.FC<HeaderProps> = ({
           Report Scam
         </Button>
 
-        {/* Quick Action: SIH Guided Demo */}
+        {/* Quick Action: Guided Product Demo */}
         <Button
           variant="secondary"
           size="sm"
@@ -132,7 +132,7 @@ export const Header: React.FC<HeaderProps> = ({
           leftIcon={<Sparkles className="w-4 h-4 text-cyan-400" />}
           className="hidden sm:inline-flex font-mono text-xs bg-indigo-950/60 border-indigo-500/30 text-indigo-200 hover:bg-indigo-900/60"
         >
-          SIH Tour
+          Product Tour
         </Button>
       </div>
     </header>

@@ -13,6 +13,7 @@ from api.reports import router as reports_router
 from api.statistics import router as stats_router
 from api.protection import router as protection_router
 from api.settings import router as settings_router
+from api.blockchain import router as blockchain_router
 
 # Initialize FastAPI application
 app = FastAPI(
@@ -38,6 +39,7 @@ app.include_router(reports_router)
 app.include_router(stats_router)
 app.include_router(protection_router)
 app.include_router(settings_router)
+app.include_router(blockchain_router)
 
 @app.on_event("startup")
 def on_startup():

@@ -53,25 +53,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-72 bg-slate-950/90 border-r border-indigo-500/20 flex flex-col h-screen select-none relative z-30 backdrop-blur-xl">
+    <aside className="w-72 bg-slate-950/90 border-r border-slate-700/70 flex flex-col h-screen select-none relative z-30 backdrop-blur-xl">
       {/* Top Header / Branding */}
-      <div className="p-5 border-b border-indigo-900/30">
+      <div className="p-5 border-b border-slate-700/80">
         <div
           onClick={onGoToLanding}
           className="flex items-center gap-3 cursor-pointer group transition-all"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 via-indigo-500 to-cyan-400 p-0.5 shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-400 via-cyan-500 to-slate-200 p-0.5 shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform">
             <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-              <ShieldCheck className="w-5 h-5 text-cyan-400 group-hover:text-indigo-300 transition-colors" />
+              <ShieldCheck className="w-5 h-5 text-sky-300 group-hover:text-cyan-200 transition-colors" />
             </div>
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-cyan-300 tracking-wider font-mono text-base">
+              <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-50 via-sky-200 to-cyan-300 tracking-wider font-mono text-base">
                 VOICEGUARD
               </span>
-              <span className="px-1.5 py-0.2 text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded">
-                SIH
+              <span className="px-1.5 py-0.2 text-[10px] font-mono font-bold bg-sky-500/15 text-sky-200 border border-sky-400/30 rounded">
+                AI
               </span>
             </div>
             <p className="text-[11px] text-slate-400 tracking-tight">AI Voice Scam Shield</p>
@@ -97,7 +97,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div>
           <div className="flex items-center justify-between px-2 mb-2.5">
             <span className="text-[10px] font-mono uppercase tracking-wider text-indigo-300/70 font-bold flex items-center gap-1.5">
-              <Zap className="w-3 h-3 text-cyan-400" /> SIH Evaluation Demos
+              <Zap className="w-3 h-3 text-cyan-400" /> Evaluation Demos
             </span>
             <button
               onClick={onOpenScenarioModal}
@@ -108,10 +108,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
 
           <div className="space-y-2">
-            {/* SIH Guided Demo Mode */}
+            {/* Guided Demo Mode */}
             <button
               onClick={onOpenSIHDemo}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-gradient-to-r from-cyan-950/70 via-indigo-950/80 to-purple-950/70 border border-cyan-500/30 hover:border-cyan-400/60 text-cyan-200 hover:text-white shadow-md shadow-cyan-950/40 group transition-all"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-gradient-to-r from-sky-950/70 via-slate-900 to-slate-800 border border-sky-500/30 hover:border-sky-400/60 text-sky-100 hover:text-white shadow-md shadow-sky-950/30 group transition-all"
             >
               <div className="flex items-center gap-2.5">
                 <div className="w-7 h-7 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-300 group-hover:scale-110 transition-transform">
@@ -119,7 +119,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
                 <div className="text-left">
                   <div className="text-xs font-bold leading-tight flex items-center gap-1">
-                    Guided SIH Demo <span className="text-[9px] bg-cyan-400/20 text-cyan-300 px-1 rounded">2 min</span>
+                    Guided Product Demo <span className="text-[9px] bg-cyan-400/20 text-cyan-300 px-1 rounded">2 min</span>
                   </div>
                   <div className="text-[10px] text-cyan-300/70">Interactive Presentation</div>
                 </div>
@@ -183,7 +183,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onClick={() => onNavigate(item.id)}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-medium text-xs transition-all duration-200 ${
                     isActive
-                      ? 'bg-gradient-to-r from-indigo-600/30 to-violet-600/20 text-white border border-indigo-500/40 shadow-sm shadow-indigo-950/50'
+                      ? 'bg-gradient-to-r from-sky-500/12 to-slate-700/80 text-white border border-sky-400/30 shadow-sm shadow-sky-900/40'
                       : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/60 border border-transparent'
                   }`}
                 >
@@ -237,7 +237,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         <div className="mt-2 text-center">
           <p className="text-[10px] font-mono text-slate-400">
-            VoiceGuard v2.4-Neural · SIH-2024-DEF
+            VoiceGuard v2.4-Neural · DEFENSE-2024
           </p>
         </div>
       </div>

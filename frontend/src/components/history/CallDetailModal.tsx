@@ -1,18 +1,11 @@
 import React from 'react';
 import {
-  PhoneCall,
   UserCheck,
   ShieldAlert,
-  Clock,
-  Radio,
   FileWarning,
-  Volume2,
-  FileText,
-  Server,
-  Download,
-  Lock
+  Server
 } from 'lucide-react';
-import { CallRecord, CallAnalysisResponse } from '../../types';
+import { CallRecord } from '../../types';
 import { Modal } from '../common/Modal';
 import { Badge } from '../common/Badge';
 import { Button } from '../common/Button';
@@ -39,27 +32,30 @@ export const CallDetailModal: React.FC<CallDetailModalProps> = ({
   if (!call) return null;
 
   const isSafe = call.risk_level === 'SAFE';
+  const syntheticProb = typeof call.synthetic_prob === 'number' ? call.synthetic_prob : (call.risk_score > 70 ? 94 : 3);
+  const scamProb = typeof call.scam_prob === 'number' ? call.scam_prob : (call.risk_score > 70 ? 92 : 2);
+  const callIdentifier = call.call_id || call.id;
 
   // Synthetic breakdown for deep modal inspection if breakdown isn't on call object
   const riskBreakdown = {
-    ai_voice_indicators: Math.round((call.synthetic_prob / 100) * 35),
-    conversation_behavior: Math.round((call.scam_prob / 100) * 25),
+    ai_voice_indicators: Math.round((syntheticProb / 100) * 35),
+    conversation_behavior: Math.round((scamProb / 100) * 25),
     financial_request: call.risk_score > 70 ? 18 : 0,
     caller_reputation: isSafe ? 2 : 10,
     call_metadata: call.is_voip ? 7 : 1,
   };
 
   const reasons = [
-    ...(call.synthetic_prob > 50
+    ...(syntheticProb > 50
       ? [
           {
             factor: 'Deep Neural Voice Synthesis Artifacts',
-            description: `Acoustic spectral scan shows synthetic phase discontinuities with ${call.synthetic_prob}% confidence.`,
+            description: `Acoustic spectral scan shows synthetic phase discontinuities with ${syntheticProb}% confidence.`,
             severity: 'CRITICAL' as const,
           },
         ]
       : []),
-    ...(call.scam_prob > 50
+    ...(scamProb > 50
       ? [
           {
             factor: 'Social Engineering & Coercion Intent',
@@ -83,7 +79,7 @@ export const CallDetailModal: React.FC<CallDetailModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Forensic Audit Dossier: ${call.call_id}`}
+      title={`Forensic Audit Dossier: ${callIdentifier}`}
       size="xl"
     >
       <div className="space-y-6">
@@ -153,14 +149,14 @@ export const CallDetailModal: React.FC<CallDetailModalProps> = ({
               </div>
               <div className="flex justify-between py-1 border-b border-slate-800/60">
                 <span className="text-slate-400">AI Synthesis Prob:</span>
-                <span className={call.synthetic_prob > 50 ? 'text-rose-400 font-bold' : 'text-emerald-400'}>
-                  {call.synthetic_prob}%
+                <span className={syntheticProb > 50 ? 'text-rose-400 font-bold' : 'text-emerald-400'}>
+                  {syntheticProb}%
                 </span>
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-slate-400">Extortion Intent:</span>
-                <span className={call.scam_prob > 50 ? 'text-rose-400 font-bold' : 'text-emerald-400'}>
-                  {call.scam_prob}%
+                <span className={scamProb > 50 ? 'text-rose-400 font-bold' : 'text-emerald-400'}>
+                  {scamProb}%
                 </span>
               </div>
             </div>
@@ -171,7 +167,7 @@ export const CallDetailModal: React.FC<CallDetailModalProps> = ({
             {/* Waveform visualizer */}
             <AudioWaveformVisualizer
               duration={call.duration}
-              isSynthetic={call.synthetic_prob > 50}
+              isSynthetic={syntheticProb > 50}
               accentColor={isSafe ? 'emerald' : 'rose'}
             />
 

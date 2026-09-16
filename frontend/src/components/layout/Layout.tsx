@@ -37,10 +37,10 @@ export const Layout: React.FC<LayoutProps> = ({
   children,
 }) => {
   return (
-    <div className="flex h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans relative selection:bg-purple-500 selection:text-white">
+    <div className="flex h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans relative selection:bg-sky-500/40 selection:text-white">
       {/* Background Cyber Grid / Ambient Glow */}
-      <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]" />
-      <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_50%_50%_at_90%_90%,rgba(6,182,212,0.06),rgba(0,0,0,0))]" />
+      <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(245,158,11,0.12),rgba(255,255,255,0))]" />
+      <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_50%_50%_at_90%_90%,rgba(148,163,184,0.08),rgba(0,0,0,0))]" />
 
       {/* Sidebar */}
       <Sidebar

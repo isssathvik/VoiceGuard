@@ -12,7 +12,7 @@ interface ThreatBannerProps {
 export const ThreatBanner: React.FC<ThreatBannerProps> = ({
   onNavigateToThreatCenter,
   threatTitle = 'CRITICAL ADVISORY: Coordinated "Digital Arrest" Voice Cloning Wave Active in Delhi NCR & Bengaluru',
-  threatDetails = 'Scammers are utilizing ElevenLabs v2 voice clone pipelines impersonating CBI & Telecom Department officers demanding immediate video isolation.',
+  threatDetails = 'Scammers are utilizing ElevenLabs v2 voice clone pipelines impersonating CBI & Telecom Department officers demanding immediate video isolation. Evidence packets are being anchored to an immutable blockchain ledger for legal traceability.',
   threatLevel = 'CRITICAL',
 }) => {
   return (
@@ -22,9 +22,12 @@ export const ThreatBanner: React.FC<ThreatBannerProps> = ({
           <ShieldAlert className="w-5 h-5" />
         </div>
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
               NATIONAL CYBER CELL ADVISORY 2026
+            </span>
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">
+              BLOCKCHAIN EVIDENCE LEDGER
             </span>
             <span className="text-[11px] font-mono text-slate-400">· 1930 Portal Synced</span>
           </div>

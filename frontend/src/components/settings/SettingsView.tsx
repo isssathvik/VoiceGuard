@@ -58,7 +58,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
     setWeightBiometric(12);
     setWeightTelecom(8);
     setCarrierGateway('Jio-IMS-SIP-Trunk-v4');
-    onShowToast('Reset to Defaults', 'SIH 2026 calibrated baseline rules restored.', 'info');
+    onShowToast('Reset to Defaults', 'Calibrated baseline rules restored.', 'info');
   };
 
   const totalWeight = weightAcoustic + weightIntent + weightFinancial + weightBiometric + weightTelecom;
@@ -133,7 +133,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onShowToast }) => {
               />
               <div className="flex justify-between text-[10px] text-slate-400 font-sans">
                 <span>Aggressive (50 - High sensitivity)</span>
-                <span>Balanced SIH Standard (75)</span>
+                <span>Balanced Security Standard (75)</span>
                 <span>Conservative (95 - Ultra strict)</span>
               </div>
             </div>
